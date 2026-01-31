@@ -1,0 +1,120 @@
+CONVERSIONS FUNCTIONS
+
+Conversion functions change the internal data type of a value, so MySQL can store, compare, calculate, or display it correctly.
+
+
+1️⃣ CAST(): Explicitly(You tell MySQL what to do) convert a value from one data type to another.
+⚠️ Key rule
+
+CAST converts types, not formats
+Formats are handled by format-aware functions.
+
+Syntax: CAST(expression AS target_type)
+
+Allowed CAST target types in MySQL
+
+SIGNED, UNSIGNED, DECIMAL(p,s), CHAR, DATE, DATETIME, TIME
+Column storage types INT, INTEGER, BIGINT are not allowed in CAST (MySQL-specific behavior).
+
+ 
+
+Number/Decimal ----> String(TO_CHAR CONCEPT)
+
+select cast(12345 as char);       12345
+select cast(12345.123 as char);   12345.123
+
+Date ----> String(TO_CHAR CONCEPT)
+select cast('2026-01-03' as char);         2026-01-03
+select cast('03-01-2026' as char);         03-01-2026
+select cast('03-January-2026' as char);    03-January-2026
+
+date → string conversion is NOT happening here, Because you are telling CAST( CHAR → CHAR ), So no conversion needed, So value is returned unchanged
+date → string conversion happens, only when the value is internally a DATE type.
+
+SELECT CAST(DATE '2026-01-02' AS CHAR);    2026-01-03(Default date(YYYY-MM-DD) format only)
+SELECT CAST(DATE '03-01-2026' AS CHAR);    Error 
+select cast(current_date() as char);       2026-01-03
+select cast(current_timestamp() as char);  2026-01-03 12:28:49
+select cast(now() as char);                2026-01-03 12:28:57
+select cast(sysdate() as char);            2026-01-03 12:29:06 
+  
+String ----> Number/Decimal (MYSQL EQUIVALENT OF TO_DECIMAL CONCEPT)
+
+select cast('12345' as signed);            12345
+select cast('12345' as unsigned);          12345
+select cast('12345.123' as unsigned);      12345 (Decimal part will be truncated)
+SELECT CAST('12345abc' AS SIGNED);         12345 (Non digit part will be truncated and warning)
+
+select cast('12345' as decimal);           12345 (decimal ---> DECIMAL(10,0) → no decimal places)
+select cast('12345.123' as decimal);       12345 (Default DECIMAL truncates decimals)
+select cast('12345' as decimal(10,2));     12345.00
+select cast('12345.123' as decimal(10,2)); 12345.12
+
+Date ----> Number/Decimal
+you are telling CAST( STRING → SIGNED )
+Select cast('2026-01-03' as signed);         2026(Non digit part will be truncated and warning)
+
+Real Date → Number conversion looks like
+select cast(date '2026-01-03' as signed);    20260103(Default date(YYYY-MM-DD) format only)
+select cast(current_date() as signed);       20260103
+select cast(current_timestamp() as signed);  20260103123614
+select cast(now() as signed);                20260103123649 
+select cast(sysdate() as signed);            20260103123659
+select cast(current_timestamp() as decimal(14,0));   20260103124555
+
+String ----> Date
+SELECT CAST('2026-01-03' AS DATE);           2026-01-03(Default date(YYYY-MM-DD) format only)
+SELECT CAST('03-01-2026' AS DATE);           Null(and warning)
+
+IN FACT THESE ARE(DATE ----> DATE)
+SELECT CAST(current_date() AS DATE);         2026-01-03 
+SELECT CAST(current_timestamp() AS DATE);    2026-01-03 
+SELECT CAST(now() AS DATE);                  2026-01-03 
+SELECT CAST(sysdate() AS DATE);              2026-01-03 
+
+STR_TO_DATE()
+STR_TO_DATE(string, format)
+Automatically returns DATE or DATETIME based on format
+
+SELECT STR_TO_DATE('09-09-2025', '%d-%m-%Y');
+SELECT STR_TO_DATE('2025-09-09 14:30:45', '%Y-%m-%d %H:%i:%s');
+
+
+Number ----> Date
+
+SELECT CAST(20260103 AS DATE);    2026-01-03(Strictly default date(YYYY-MM-DD) format only)
+SELECT CAST(03012026 AS DATE);    NULL(and warning)
+
+IN FACT THESE ARE(DATE ----> DATE)
+SELECT CAST(current_date() AS DATE);         2026-01-03
+SELECT CAST(current_timestamp() AS DATE);    2026-01-03
+S ELECT CAST(now() AS DATE);                 2026-01-03
+SELECT CAST(sysdate() AS DATE);              2026-01-03
+
+
+
+(TO_CHAR Equivalent)
+
+DATE_FORMAT() — Date → String Converts date to formatted string.
+
+DATE_FORMAT never parses strings — it formats already-valid date/time values.
+If implicit conversion fails, the result is NULL.
+
+(Strictly default date(YYYY-MM-DD) format only)
+SELECT DATE_FORMAT('2026-01-03', '%d-%m-%Y');   03-01-2026
+SELECT DATE_FORMAT('2026-01-03 22:33:44', '%d-%m-%Y %H:%i:%s'); 03-01-2026 22:33:44 
+SELECT DATE_FORMAT(current_timestamp(), '%d-%m-%Y %H:%i:%s');   03-01-2026 15:13:16
+
+FORMAT() — Number → Formatted String (Add commas and control decimal places)
+FORMAT() in MySQL formats a numeric value into a string with a specified number of 
+decimal places and has no default precision, so the decimals argument is mandatory.
+
+SELECT FORMAT(12345, 0);      12,345 
+SELECT FORMAT(12345.123, 0);  12,345
+SELECT FORMAT(12345.123, 2);  12,345.12  
+
+
+
+
+
+

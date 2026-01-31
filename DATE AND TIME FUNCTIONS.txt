@@ -1,0 +1,130 @@
+DATE AND TIME FUNCTIONS
+
+Both are same
+select extract(year from '2025-09-28');
+select year('2025-12-30');    ----> 2025
+select dayname('2025-12-30'); ----> Tuesday
+
+now() and sysdate() are MySQL functions, NOW() returns a fixed timestamp for the whole query, while SYSDATE() returns the actual system time at execution and may change within the same query.
+SELECT NOW(), SLEEP(5), NOW();         ----> 2025-12-30 10:00:00 | 0 | 2025-12-30 10:00:00
+SELECT SYSDATE(), SLEEP(5), SYSDATE(); ----> 2025-12-30 10:00:00 | 0 | 2025-12-30 10:00:05
+
+String → DATE / DATETIME
+1️⃣ STR_TO_DATE()
+STR_TO_DATE(string, format)
+Automatically returns DATE or DATETIME based on format
+
+SELECT STR_TO_DATE('09-09-2025', '%d-%m-%Y');
+SELECT STR_TO_DATE('2025-09-09 14:30:45', '%Y-%m-%d %H:%i:%s');
+
+%Y      4-digit year
+%y      2-digit year
+%m	Month number (01–12)
+%c	Month number (1–12)
+%d	Day (01–31)
+%e	Day (1–31)
+%M	January, February, September
+%b	Jan, Feb, Sep
+
+select str_to_date('2025-12-29', '%Y-%m-%d'), str_to_date('29/12/2025', '%d/%m/%Y'), str_to_date('122925', '%m%d%y'), str_to_date('2025-december-29', '%Y-%M-%d'), str_to_date('dec-25-29', '%b-%y-%d');---------> output is same 2025-12-29
+
+%H	Hour (24-hour)	00–23
+%h	Hour (12-hour)	01–12
+%I	Hour (12-hour)	01–12
+%i	Minutes	00–59
+%s	Seconds	00–59
+%p	AM / PM	Required with %h or %I**(If your string has AM/PM, your format MUST include %p)**
+%f	Microseconds	Up to 6 digits
+
+select str_to_date('29/12/25 11:22:44','%d/%m/%Y %H:%i:%s');                   2025-12-29 11:22:44
+select str_to_date('29/25/Dec 11:22:44','%d/%Y/%b %h:%i:%s');                  2025-12-29 11:22:44
+select str_to_date('29/25/Dec 11:22:44:89009911','%d/%Y/%b %H:%i:%s:%f');      2025-12-29 11:22:44.890099
+select str_to_date('25/December/29 11:22:44:89009911','%Y/%M/%d %h:%i:%s:%f'); 2025-12-29 11:22:44.890099
+
+Using %h/%I with %p converts 12-hour time (AM/PM) into correct 24-hour time.
+ select str_to_date('2025-12-29 11:59:59 PM','%Y-%m-%d %h:%i:%s %p');
+ select str_to_date('2025-12-29 11:59:59 PM','%Y-%m-%d %I:%i:%s %p'); for both result is 2025-12-29 23:59:59
+ select str_to_date('2025-12-29 12:00:00 AM','%Y-%m-%d %h:%i:%s %p'); result is 2025-12-29 00:00:00 (because in 24h time 12AM is 00:00:00)
+ select str_to_date('2025-12-29 12:00:00 PM','%Y-%m-%d %h:%i:%s %p'); result is 2025-12-29 12:00:00 (because in 24h time 12PM is 12:00:00)
+
+2️⃣ CAST()
+CAST(string AS DATE)
+CAST(string AS DATETIME)
+CAST(string AS TIMESTAMP)
+
+SELECT CAST('2025-12-29' AS DATE);
+SELECT CAST('2025-12-29 21:30:45' AS DATETIME);
+
+3️⃣ CONVERT() Same as CAST()
+
+SELECT CONVERT('2025-12-29', DATE);
+SELECT CONVERT('2025-12-29 21:30:45', DATETIME);
+
+CAST/CONVERT work, ONLY if the string is already in DATE → YYYY-MM-DD, DATETIME / TIMESTAMP → YYYY-MM-DD HH:MM:SS
+
+1️⃣ DATEDIFF() returns the number of days between two dates, ignoring the time portion.
+
+Syntax: DATEDIFF(date1(Later), date2(earlier))
+
+Example:
+
+SELECT DATEDIFF('2025-12-29', '2025-12-25') AS diff; ----> 4
+SELECT DATEDIFF(current_date, '2025-12-25') AS diff;
+
+2️⃣ TIMESTAMPDIFF()
+Returns the difference between two date/timestamps in a chosen unit(YEAR, QUARTER, MONTH, WEEK, DAY,HOUR, MINUTE, SECOND,MICROSECOND)
+
+Syntax: TIMESTAMPDIFF(unit, datetime1, datetime2)
+       Result = datetime2 − datetime1
+
+Examples:
+
+SELECT TIMESTAMPDIFF(microsecond, '2022-01-01', '2025-12-30');
+SELECT TIMESTAMPDIFF(microsecond, '2020-09-06', current_date());
+SELECT TIMESTAMPDIFF(second,'2019-04-30 10:30:00','2025-12-30 11:29:59');
+
+
+
+✅ DATE_ADD() Adds a time interval to a date or datetime.
+
+Syntax: DATE_ADD(date, INTERVAL value unit)
+
+Examples:
+        SELECT DATE\_ADD('2025-12-30', INTERVAL 10 year);  -----> 2035-12-30
+
+        SELECT DATE_ADD(current_date(), INTERVAL 10 day); -----> 2026-01-09
+        SELECT DATE_ADD(current_date(), INTERVAL 23 hour);  -----> 2025-12-30 23:00:00
+        SELECT DATE_ADD('2025-12-30', INTERVAL 24 hour);  -----> 2025-12-31 00:00:00
+ 
+        SELECT DATE_ADD(current_timestamp(), INTERVAL 10 year); ----> 2035-12-30 11:42:33
+        SELECT DATE_ADD(current_timestamp(), INTERVAL 23 hour); ----> 2025-12-31 10:43:34
+
+✅ TIMESTAMPADD() Adds an interval to a DATE/DATETIME/TIMESTAMP.
+
+Syntax: TIMESTAMPADD(unit, value, datetime)
+
+Examples:
+         SELECT TIMESTAMPADD(year, 10, '2025-12-30'); ----->  2035-12-30
+         SELECT TIMESTAMPADD(day, 10, current_date()); ---->  2026-01-09
+         SELECT TIMESTAMPADD(hour, 23, current_date()); ----> 2025-12-30 23:00:00
+         SELECT TIMESTAMPADD(hour, 24, current_date()); ----> 2025-12-31 00:00:00
+
+         SELECT TIMESTAMPADD(year, 10, current_timestamp()); ----> 2035-12-30 12:08:18
+         SELECT TIMESTAMPADD(hour, 23, current_timestamp()); ----> 2025-12-31 11:09:32
+
+Both DATE_ADD() and TIMESTAMPADD() support all date and time units, but when adding HOUR, MINUTE, SECOND, or MICROSECOND, it’s important to use CURRENT_TIMESTAMP (or a DATETIME/TIMESTAMP value) instead of CURRENT_DATE, otherwise the time portion is lost.
+
+MONTHS_BETWEEN(date1, date2): Returns the number of months (can be fractional) between two dates
+
+MySQL does not support MONTHS_BETWEEN(); use TIMESTAMPDIFF(MONTH, ...) instead, it returns whole months only.
+
+select timestampdiff(month, '2024-11-30', '2025-12-20'); ----> 12
+
+
+Questions:
+
+Find the experience of all employees in years and months.
+
+select emp_id, first_name, join_date, concat(timestampdiff(year, join_date, current_date),'years',' ',mod(timestampdiff(month,join_date,current_date), 12),'months') as experience from emp;
+ we can also calculate experience by using start_date and end_date of employees;
+ 

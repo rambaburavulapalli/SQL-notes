@@ -1,0 +1,89 @@
+SUBQUERIES USING IN AND EXISTS
+
+What is a Query?
+A query is a SQL statement used to retrieve or manipulate data in a database.
+SELECT * FROM employees;
+
+What is a Subquery?
+A subquery is a query written inside another SQL query, also called inner query or nested query.
+Can be used with SELECT, INSERT, UPDATE, and DELETE statements.
+Can be used in WHERE, FROM, and JOIN clauses.
+Subquery must be enclosed in parentheses ( ).
+The subquery generally executes first, if it has no correlation with the main query, so the result of outer query is dependent on the subquery.
+
+What is Correlated Subquery?
+
+If a subquery (inner or nested query) uses column(s) or values from the outer query, it is called a correlated subquery.
+If it does not use any column or value from the outer query, it is called a non-correlated subquery.
+
+In a correlated subquery, the inner query depends on the outer query for input values, and the outer query depends 
+on the inner query’s result; hence, it is called a correlated.
+
+IN: To match a column or expression against a list of values, the values can be direct or from the result of a subquery.
+
+Syntax: SELECT */column_list FROM table_name WHERE column_name IN (value1, value2, value3);
+        SELECT */column_list FROM table_name WHERE column_name IN (subquery);
+
+Example:
+SELECT * FROM employees WHERE dept_id IN (SELECT dept_id FROM departments WHERE department_name IN ('Sales', 'Finance'));
+
+EXISTS: checks whether a subquery returns at least one row and returns TRUE or FALSE accordingly.
+
+Syntax: SELECT */column_list FROM table_name WHERE EXISTS (subquery);
+
+Example:
+SELECT * FROM employees e WHERE EXISTS (SELECT 1/* FROM departments d WHERE e.dept_id = d.dept_id and d.department_name in ('sales','finance'));
+
+NOTE: NOT IN is just opposite to IN, NOT EXISTS is just opposite to EXISTS
+
+
+count(*) in exists:    
+SELECT * FROM employees e WHERE EXISTS (SELECT count(*) FROM departments d WHERE e.dept_id = d.dept_id and d.department_name in ('sales','finance'));
+SELECT * FROM employees e WHERE EXISTS (SELECT count(*) FROM departments d WHERE e.dept_id = d.dept_id and d.department_name in ('ales','inance'));
+Here for both queries, you will get all(8) employees details, instead of getting only 7(sales, finance) employees details. this is wrong
+
+EXISTS only checks whether the subquery returns at least one row for the current outer query row.
+SELECT 1 and SELECT * return zero rows when no match exists, but COUNT() always returns one row, even when the count is zero.
+Therefore COUNT() makes EXISTS always true.
+
+-- Find the name of employee who is getting highest salary?
+select employee_id, first_name, last_name, salary from employees where salary=(select max(salary) from employees);
+
+-- Find the number of employees in administration dept?
+select count(*) from employees where dept_id =(select dept_id from departments where department_name='administration'); --> 1 emp
+
+(=) Works only if subquery returns exactly one value, you will get Error if subquery returns more than one row.
+
+Subqueries with IN
+-- Find the total number of employees working in dept_ids 202,203, 206, 208
+select count(*) from employees where dept_id in (202,203,206,208); ----> 4 emps
+
+-- Find the total number of employees working in depts sales, administration, finance?
+select count(*) from employees where dept_id in (select dept_id from departments where department_name in('sales','administration','finance')); --> 8 emps
+
+
+Nested subquery
+-- Find the number of employees working from Hyd location(city)?
+select count(*) from employees where dept_id in (select dept_id from departments where location_id = (select location_id from locations where city='hyd')); --> 1 emp
+
+Subqueries with EXISTS and NOT EXISTS (or) 
+Correlated subqueries:
+-- Find the total number of employees who are working in administration and finance?
+select count(*) from employees e where exists (select * from departments d where e.dept_id = d.dept_id and d.department_name in ('administration','finance')); --> 4
+
+-- Find the total number of employees who are not working in administration and finance?
+select count(*) from employees e where not exists (select * from departments d where e.dept_id = d.dept_id and d.department_name in ('administration','finance'));-->4
+
+
+select count(1) from employees; ---> 8 = 4+4
+select count(*) from employees; ---> 8 = 4+4
+
+
+Subqueries with JOINS pending pettaadu...
+
+
+
+
+
+
+

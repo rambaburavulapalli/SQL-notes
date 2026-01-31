@@ -1,0 +1,448 @@
+Set operators compare an entire ROW (all selected columns) of one result set with an entire ROW of another result set — not a single column.
+
+SET OPERATORS IN SQL
+Set operators combine the results of two or more SELECT queries into one result set, just like mathematical set operations.
+
+IMPORTANT RULES TO PERFORM SET OPERATIONS:
+Number of columns must be the same in all SELECT queries.
+2. Order of columns must be the same in all SELECT queries.
+3. Data types of the columns must be compatible.
+4. Column names in the final result come from the first SELECT query.
+
+TYPES OF SET OPERATORS:
+UNION
+UNION ALL
+INTERSECT
+EXCEPT/MINUS
+
+Example tables:
+select * from table_a;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|     21 | lakshmi  |
+|     22 | babu     |
++--------+----------+
+
+select * from table_b;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|     22 | babu     |
+|     25 | venky    |
+|     28 | brahmi   |
++--------+----------+
+
+UNION:
+Combines results of two or more SELECT queries and removes duplicate rows.
+
+Syntax:
+SELECT col1, col2... col n FROM table1
+UNION
+SELECT col1, col2... col n FROM table2;
+UNION
+SELECT col1, col2... col n FROM table2;
+......
+......
+
+Example:
+select emp_id, emp_name from table_a union select emp_id, emp_name from table_b;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|     21 | lakshmi  |
+|     22 | babu     |
+|     25 | venky    |
+|     28 | brahmi   |
++--------+----------+
+
+UNION ALL:
+Combines results of two or more SELECT queries but doesn't remove duplicate rows.
+
+Syntax:
+SELECT col1, col2... col n FROM table1
+UNION ALL
+SELECT col1, col2... col n FROM table2;
+UNION ALL
+SELECT col1, col2... col n FROM table2;
+......
+......
+
+Example:
+select emp_id, emp_name from table_a union all select emp_id, emp_name from table_b;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|     21 | lakshmi  |
+|     22 | babu     |
+|     22 | babu     |
+|     25 | venky    |
+|     28 | brahmi   |
++--------+----------+
+
+INTERSECT:
+Returns only common rows from two or more SELECT queries.
+
+Syntax:
+SELECT col1, col2... col n FROM table1
+INTERSECT
+SELECT col1, col2... col n FROM table2;
+INTERSECT
+SELECT col1, col2... col n FROM table2;
+......
+......
+
+Example:
+select emp_id, emp_name from table_a intersect select emp_id, emp_name from table_b;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|     22 | babu     |
++--------+----------+
+
+EXCEPT/MINUS:
+Returns rows from first SELECT that do not exist in second SELECT.
+
+Example: A-B
+select emp_id, emp_name from table_a except select emp_id, emp_name from table_b;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|     21 | lakshmi  |
++--------+----------+
+
+Example: B-A
+select emp_id, emp_name from table_b except select emp_id, emp_name from table_a;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|     25 | venky    |
+|     28 | brahmi   |
++--------+----------+
+
+IMPORTANT INTERVIEW QUESTION:
+---What is the difference between UNION and UNION ALL, which gives better performance, which one you choose?
+
+UNION and UNION ALL are used to combine the results of two or more SELECT queries. The difference is UNION removes duplicate rows from the final result set, whereas UNION ALL does not remove duplicates.
+Performance wise, UNION ALL is faster because it simply combines the results and UNION is slower because it performs duplicate rows elimination.
+So, we choose UNION when duplicate removal is needed, UNION ALL when better performance is needed. 
+
+
+PRACTICE:
+create table students_maths(st_id int primary key, st_name varchar(20), st_marks int, st_bdate date);
+create table students_physics(roll_no int primary key, name varchar(20), marks int, dob varchar(20));
+create table students_chemistry(sid int primary key, sname varchar(20), sgender varchar(1), smarks integer, shbd date);
+
+select * from students_maths;
++-------+---------+----------+------------+
+| st_id | st_name | st_marks | st_bdate   |
++-------+---------+----------+------------+
+|     1 | Rams    |       90 | 1997-12-29 |
+|     2 | Brahmi  |       93 | 1996-02-19 |
+|     3 | Kar     |       80 | 1997-03-22 |
+|     4 | Naga    |       78 | 1998-09-29 |
+|     5 | Gopi    |       75 | 1997-01-01 |
+|     6 | Vijay   |       60 | 1995-11-26 |
+|     7 | Lakshmi |       98 | 1998-09-25 |
++-------+---------+----------+------------+
+7 rows in set (0.00 sec)
+
+select * from students_physics;
++---------+---------+-------+----------+
+| roll_no | name    | marks | dob      |
++---------+---------+-------+----------+
+|       1 | Rams    |    89 | 19971229 |
+|       3 | Kar     |    89 | 19970322 |
+|       4 | Naga    |    77 | 19980929 |
+|       6 | Vijay   |    90 | 19951126 |
+|       7 | Lakshmi |    70 | 19980925 |
+|       8 | Sandhya |    67 | 19980121 |
+|       9 | Venky   |    99 | 19951212 |
+|      10 | Ashok   |   100 | 19960830 |
++---------+---------+-------+----------+
+8 rows in set (0.00 sec)
+
+select * from students_chemistry;
++-----+---------+---------+--------+------------+
+| sid | sname   | sgender | smarks | shbd       |
++-----+---------+---------+--------+------------+
+|   1 | Rams    | M       |     95 | 1997-12-29 |
+|   2 | Brahmi  | M       |     89 | 1996-02-19 |
+|   4 | Naga    | M       |     66 | 1998-09-29 |
+|   5 | Gopi    | M       |     99 | 1997-01-01 |
+|   7 | Lakshmi | F       |     85 | 1998-09-25 |
+|   8 | Sandhya | F       |     88 | 1998-01-21 |
+|   9 | Venky   | M       |    100 | 1995-12-12 |
+|  10 | Ashok   | M       |     99 | 1996-08-30 |
+|  11 | Rose    | F       |     90 | 1997-12-28 |
++-----+---------+---------+--------+------------+
+9 rows in set (0.00 sec)
+
+
+----UNION----
+Example:
+select * from students_maths union select * from students_physics;
++-------+---------+----------+------------+
+| st_id | st_name | st_marks | st_bdate   |
++-------+---------+----------+------------+
+|     1 | Rams    |       90 | 1997-12-29 |
+|     2 | Brahmi  |       93 | 1996-02-19 |
+|     3 | Kar     |       80 | 1997-03-22 |
+|     4 | Naga    |       78 | 1998-09-29 |
+|     5 | Gopi    |       75 | 1997-01-01 |
+|     6 | Vijay   |       60 | 1995-11-26 |
+|     7 | Lakshmi |       98 | 1998-09-25 |
+|     1 | Rams    |       89 | 19971229   |
+|     3 | Kar     |       89 | 19970322   |
+|     4 | Naga    |       77 | 19980929   |
+|     6 | Vijay   |       90 | 19951126   |
+|     7 | Lakshmi |       70 | 19980925   |
+|     8 | Sandhya |       67 | 19980121   |
+|     9 | Venky   |       99 | 19951212   |
+|    10 | Ashok   |      100 | 19960830   |
++-------+---------+----------+------------+
+15 rows in set (0.00 sec)
+We don't get error but we need to convert dob varchar to date form.
+
+Example:
+select * from students_maths union select * from students_physics union select * from students_chemistry;
+ERROR 1222 (21000): The used SELECT statements have a different number of columns ---> 5 columns in students_chemistry table
+
+Number of columns and data types should be similar.
+Convert dob varchar to date form in physics table ----> str_to_date(dob, '%Y%m%d')
+Choose only 4 columns in chemistry table
+
+Example: 
+select st_id, st_name, st_marks, st_bdate from students_maths union select roll_no, name, marks, str_to_date(dob, '%Y%m%d') from students_physics union select sid, sname, smarks, shbd from students_chemistry;
++-------+---------+----------+------------+
+| st_id | st_name | st_marks | st_bdate   |
++-------+---------+----------+------------+
+|     1 | Rams    |       90 | 1997-12-29 |
+|     2 | Brahmi  |       93 | 1996-02-19 |
+|     3 | Kar     |       80 | 1997-03-22 |
+|     4 | Naga    |       78 | 1998-09-29 |
+|     5 | Gopi    |       75 | 1997-01-01 |
+|     6 | Vijay   |       60 | 1995-11-26 |
+|     7 | Lakshmi |       98 | 1998-09-25 |
+|     1 | Rams    |       89 | 1997-12-29 |
+|     3 | Kar     |       89 | 1997-03-22 |
+|     4 | Naga    |       77 | 1998-09-29 |
+|     6 | Vijay   |       90 | 1995-11-26 |
+|     7 | Lakshmi |       70 | 1998-09-25 |
+|     8 | Sandhya |       67 | 1998-01-21 |
+|     9 | Venky   |       99 | 1995-12-12 |
+|    10 | Ashok   |      100 | 1996-08-30 |
+|     1 | Rams    |       95 | 1997-12-29 |
+|     2 | Brahmi  |       89 | 1996-02-19 |
+|     4 | Naga    |       66 | 1998-09-29 |
+|     5 | Gopi    |       99 | 1997-01-01 |
+|     7 | Lakshmi |       85 | 1998-09-25 |
+|     8 | Sandhya |       88 | 1998-01-21 |
+|     9 | Venky   |      100 | 1995-12-12 |
+|    10 | Ashok   |       99 | 1996-08-30 |
+|    11 | Rose    |       90 | 1997-12-28 |
++-------+---------+----------+------------+
+24 rows in set (0.00 sec)
+
+Example: Get the names and id's of all distinct students.
+select st_id as student_id, st_name as student_name from students_maths union select roll_no, name from students_physics union select sid, sname from students_chemistry;
++------------+--------------+
+| student_id | student_name |
++------------+--------------+
+|          1 | Rams         |
+|          2 | Brahmi       |
+|          3 | Kar          |
+|          4 | Naga         |
+|          5 | Gopi         |
+|          6 | Vijay        |
+|          7 | Lakshmi      |
+|          8 | Sandhya      |
+|          9 | Venky        |
+|         10 | Ashok        |
+|         11 | Rose         |
++------------+--------------+
+11 rows in set (0.00 sec)
+
+----UNION ALL----
+Example: Get the names and id's of all students including duplicates.
+select st_id as student_id, st_name as student_name from students_maths union all select roll_no, name from students_physics union all select sid, sname from students_chemistry;
++------------+--------------+
+| student_id | student_name |
++------------+--------------+
+|          1 | Rams         |
+|          2 | Brahmi       |
+|          3 | Kar          |
+|          4 | Naga         |
+|          5 | Gopi         |
+|          6 | Vijay        |
+|          7 | Lakshmi      |
+|          1 | Rams         |
+|          3 | Kar          |
+|          4 | Naga         |
+|          6 | Vijay        |
+|          7 | Lakshmi      |
+|          8 | Sandhya      |
+|          9 | Venky        |
+|         10 | Ashok        |
+|          1 | Rams         |
+|          2 | Brahmi       |
+|          4 | Naga         |
+|          5 | Gopi         |
+|          7 | Lakshmi      |
+|          8 | Sandhya      |
+|          9 | Venky        |
+|         10 | Ashok        |
+|         11 | Rose         |
++------------+--------------+
+24 rows in set (0.00 sec)
+ 
+----INTERSECT----
+Example: Get list of students who attended all exams?
+select st_id as student_id, st_name as student_name from students_maths intersect select roll_no, name from students_physics intersect select sid, sname from students_chemistry;
++------------+--------------+
+| student_id | student_name |
++------------+--------------+
+|          1 | Rams         |
+|          4 | Naga         |
+|          7 | Lakshmi      |
++------------+--------------+
+3 rows in set (0.00 sec)
+
+----MINUS----
+MySQL does not support the MINUS operator.
+
+----EXCEPT----
+Example: Get the list of students who attended maths exam but not physics exam?
+select st_id, st_name from students_maths except select roll_no, name from students_physics;
++-------+---------+
+| st_id | st_name |
++-------+---------+
+|     2 | Brahmi  |
+|     5 | Gopi    |
++-------+---------+
+2 rows in set (0.00 sec)
+
+Remember, set operators compares entire row in one table with another table, not single record; 
+select * from students_maths except select * from students_physics;
++-------+---------+----------+------------+
+| st_id | st_name | st_marks | st_bdate   |
++-------+---------+----------+------------+
+|     1 | Rams    |       90 | 1997-12-29 |
+|     2 | Brahmi  |       93 | 1996-02-19 |
+|     3 | Kar     |       80 | 1997-03-22 |
+|     4 | Naga    |       78 | 1998-09-29 |
+|     5 | Gopi    |       75 | 1997-01-01 |
+|     6 | Vijay   |       60 | 1995-11-26 |
+|     7 | Lakshmi |       98 | 1998-09-25 |
++-------+---------+----------+------------+
+7 rows in set (0.00 sec)
+
+---USE CASES
+Get subject wise marks of all students.
+select st_id, st_name, 'maths' as subject, st_marks from students_maths union select roll_no, name, 'physics' as subject, marks from students_physics union select sid, sname, 'chemistry' as subject, smarks from students_chemistry order by st_id;
++-------+---------+-----------+----------+
+| st_id | st_name | subject   | st_marks |
++-------+---------+-----------+----------+
+|     1 | Rams    | maths     |       90 |
+|     1 | Rams    | physics   |       89 |
+|     1 | Rams    | chemistry |       95 |
+|     2 | Brahmi  | maths     |       93 |
+|     2 | Brahmi  | chemistry |       89 |
+|     3 | Kar     | maths     |       80 |
+|     3 | Kar     | physics   |       89 |
+|     4 | Naga    | maths     |       78 |
+|     4 | Naga    | physics   |       77 |
+|     4 | Naga    | chemistry |       66 |
+|     5 | Gopi    | maths     |       75 |
+|     5 | Gopi    | chemistry |       99 |
+|     6 | Vijay   | maths     |       60 |
+|     6 | Vijay   | physics   |       90 |
+|     7 | Lakshmi | maths     |       98 |
+|     7 | Lakshmi | physics   |       70 |
+|     7 | Lakshmi | chemistry |       85 |
+|     8 | Sandhya | physics   |       67 |
+|     8 | Sandhya | chemistry |       88 |
+|     9 | Venky   | physics   |       99 |
+|     9 | Venky   | chemistry |      100 |
+|    10 | Ashok   | physics   |      100 |
+|    10 | Ashok   | chemistry |       99 |
+|    11 | Rose    | chemistry |       90 |
++-------+---------+-----------+----------+
+24 rows in set (0.00 sec)
+
+2. Get the list of students who attended one or two exams but not all 3.
+
+(select st_id as student_id, st_name as student_name from students_maths union select roll_no, name from students_physics union select sid, sname from students_chemistry) 
+except 
+(select st_id as student_id, st_name as student_name from students_maths intersect select roll_no, name from students_physics intersect select sid, sname from students_chemistry);
+
+select * from (select st_id as student_id, st_name as student_name from students_maths union select roll_no, name from students_physics union select sid, sname from students_chemistry) as all_students 
+except select * from (select st_id as student_id, st_name as student_name from students_maths intersect select roll_no, name from students_physics intersect select sid, sname from students_chemistry) as common_students;
+
+The UNION operation returns all distinct students from all subjects.
+The INTERSECT operation returns students common to all subjects.
++------------+--------------+
+| student_id | student_name |
++------------+--------------+
+|          2 | Brahmi       |
+|          3 | Kar          |
+|          5 | Gopi         |
+|          6 | Vijay        |
+|          8 | Sandhya      |
+|          9 | Venky        |
+|         10 | Ashok        |
+|         11 | Rose         |
++------------+--------------+
+8 rows in set (0.00 sec)
+
+3. Get the list of students who attended physics and chemistry but not maths.
+(select roll_no as student_id, name as student_name from students_physics intersect select sid, sname from students_chemistry) except select st_id, st_name from students_maths;
++------------+--------------+
+| student_id | student_name |
++------------+--------------+
+|          8 | Sandhya      |
+|          9 | Venky        |
+|         10 | Ashok        |
++------------+--------------+
+3 rows in set (0.00 sec)
+
+4. Getting total marks of students who attended all exams
+select student_id, student_name, sum(student_marks) as total_marks from 
+---- getting all distict students----
+(select st_id as student_id, st_name as student_name, st_marks as student_marks from students_maths union select roll_no, name, marks from students_physics union select sid, sname, smarks from students_chemistry) all_dis_stud 
+where student_id in 
+---- students wrote all 3 exams----
+(select st_id as student_id from students_maths intersect select roll_no from students_physics intersect select sid from students_chemistry) 
+group by student_id, student_name;
++------------+--------------+-------------+
+| student_id | student_name | total_marks |
++------------+--------------+-------------+
+|          1 | Rams         |         274 |
+|          4 | Naga         |         221 |
+|          7 | Lakshmi      |         253 |
++------------+--------------+-------------+
+3 rows in set (0.00 sec)
+
+5. Assign ranks to students who attended all 3 exams based on total marks
+select student_id, student_name, total_marks, dense_rank() over(order by total_marks desc) as ranks from 
+(select student_id, student_name, sum(student_marks) as total_marks from(select st_id as student_id, st_name as student_name, st_marks as student_marks from students_maths union select roll_no, name, marks from students_physics union select sid, sname, smarks from students_chemistry) as all_dis_stud where student_id in (select st_id as student_id from students_maths intersect select roll_no from students_physics intersect select sid from students_chemistry) group by student_id, student_name) 
+as stud_rank order by ranks;
++------------+--------------+-------------+-------+
+| student_id | student_name | total_marks | ranks |
++------------+--------------+-------------+-------+
+|          1 | Rams         |         274 |     1 |
+|          7 | Lakshmi      |         253 |     2 |
+|          4 | Naga         |         221 |     3 |
++------------+--------------+-------------+-------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+what is the difference between joins and sets?  
+
+

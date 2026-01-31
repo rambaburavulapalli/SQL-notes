@@ -1,0 +1,380 @@
+CONSTRAINTS IN SQL
+
+Constraints in MySQL are rules applied to table columns to restrict the type of data that can be stored in a table.
+If a constraint is violated, the database will return an error.
+They ensure data integrity, accuracy, and consistency.
+
+Types of Constraints:
+
+NOT NULL
+DEFAULT
+CHECK
+UNIQUE
+PRIMARY KEY
+FOREIGN KEY
+
+🔹 Constraint written beside column → Column-level
+🔹 Constraint written after all columns → Table-level
+
+NOTE: Constraints can be specified at the time of table creation, or they can be added later using the ALTER TABLE statement.
+
+NOT NULL: Can be applied only at Column level
+Ensures that a column cannot contain NULL values.
+Allows duplicate values.
+
+DEFAULT: Can be applied only at Column level
+Always provides a default value when no value is given.
+DEFAULT does NOT allow NULL by itself.
+But you can explicitly insert null, then DEFAULT value is not applied.
+Allows duplicate values.
+
+UNIQUE: Can be applied at both Column and Table level
+Ensures that all non-NULL values are different.
+Duplicate non-NULL values are NOT allowed.
+Allows multiple NULL values.
+
+CHECK: Can be applied at both Column and Table level
+Ensures that column values satisfy a specific condition.
+Allows null values.
+Allows duplicate values.                      
+
+PRIMARY KEY: Can be applied at both Column and Table level
+Uniquely identifies each row in a table
+Combination of NOT NULL + UNIQUE
+A table can have only one PRIMARY KEY
+
+COMPOSITE PRIMARY KEY
+A Composite Primary Key uses two or more columns together to uniquely identify a row.
+PRIMARY KEY (student_id, course_id)
+
+
+FOREIGN KEY: FOREIGN KEY is logically a table-level constraint, even when written inline.
+Ensures referential integrity between two tables.
+
+A Foreign Key is a column (or combination of columns) in one table that refers to the PRIMARY KEY or UNIQUE key in another table.
+The table containing the Primary Key is called the Parent table.
+The table containing the Foreign Key is called the Child table.
+The value stored in the child table must already exist in the parent table.
+The REFERENCES keyword is used to define a foreign key.
+
+Example1:
+
+PARENT table
+create table dept(
+      dept_id int primary key, 
+      dept_name varchar(20) not null, 
+      manager_id int 
+);
+
+Parent table should be created first.
+Parent table does NOT contain a foreign key.
+Parent table does not depend on any other table
+
+
+CHILD table
+create table employee(
+      emp_id int primary key, 
+      first_name varchar(20) not null, 
+      last_name varchar(20), 
+      email varchar(20) unique, 
+      age int check(age>=18), 
+      salary decimal(10,2) default 0, 
+      dept_id int, 
+      foreign key(dept_id) references dept(dept_id)
+);
+
+Child table ALWAYS contains the foreign key.
+Child table depends on the parent table.
+
+
+Example2:
+
+create table dep (
+    dep_id int primary key,
+    dep_name varchar(30) not null
+);
+
+
+create table emp(
+      emp_id int primary key, 
+      alt_emp_id int primary key,      -- ❌ if you want mention at table level primary key(emp_id, alt_emp_id)
+      first_name varchar(20) not null, 
+      last_name varchar(20) not null, 
+      email varchar(80) unique, 
+      ph_no varchar(10) unique, 
+      aadhar varchar(12) unique, 
+      age int check(age>=18), 
+      salary decimal(10,2) check(salary>0), 
+      status varchar(20) default 'active', 
+      country varchar(20) default 'India', 
+      dep_id int, 
+      foreign key(dep_id) references dep(dep_id)
+);
+
+
+INTERVIEW QUESTION: How many PRIMARY KEY and UNIQUE constraints can a table have?
+
+A table can have only one primary key constraint, but it can have multiple unique constraints.
+
+
+
+Created 3 tables city, customers, orders and checked all constraints behaviour
+
+create table city(city_id int primary key, 
+                 city_cd varchar(3) unique, 
+                 city_name varchar(20));
+
+create table customers(cust_id int primary key, 
+                      cust_name varchar(20) not null, 
+                      address varchar(50), 
+                      acc_bal float check(acc_bal >=1000), 
+                      ph_no varchar(10), 
+                      city_id int, 
+                      foreign key(city_id) references city(city_id));
+
+create table orders(order_id int primary key, 
+                    order_date date, 
+                    total_price float check(total_price>0), 
+                    order_status varchar(20) default 'New', 
+                    cust_id int, 
+                    foreign key(cust_id) references customers(cust_id));
+
+FOREIGN KEY constraint violation
+insert into customers values(101, 'anurag', 'flat 123\, abc colony', 4000, '9807654321', 1);
+-----> When i try to insert values into customers, i am getting error like 
+"ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`ruler`.`customers`, CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`))"
+
+-----> So first we need insert values into parent table city.
+UNIQUE constraint violation
+insert into city values(1, 'BAN', 'banglore'), 
+                       (2, 'KOL', 'kolkata'), 
+                       (3, 'HYD', 'hyderabad'), 
+                       (4, 'CHN', 'chennai'), 
+                       (5, 'MUM', 'mumbai'), 
+                       (6, 'HYD', 'hyderabad'), 
+                       (6, 'DEL', 'delhi');
+ERROR 1062 (23000): Duplicate entry 'HYD' for key 'city.city_cd
+
+PRIMARY KEY constraint violation
+insert into city values(1, 'BAN', 'banglore'), 
+                       (2, 'KOL', 'kolkata'), 
+                       (3, 'HYD', 'hyderabad'), 
+                       (4, 'CHN', 'chennai'), 
+                       (5, 'MUM', 'mumbai'), 
+                       (6, 'PUN', 'pune'), 
+                       (6, 'DEL', 'delhi');
+ERROR 1062 (23000): Duplicate entry '6' for key 'city.PRIMARY
+
+Now no violations
+insert into city values(1, 'BAN', 'banglore'), 
+                       (2, 'KOL', 'kolkata'), 
+                       (3, 'HYD', 'hyderabad'), 
+                       (4, 'CHN', 'chennai'), 
+                       (5, 'MUM', 'mumbai'), 
+                       (6, 'PUN', 'pune'), 
+                       (7, 'DEL', 'delhi');
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+
+insert into customers values(101, 'anurag', 'flat 123\, abc colony', 4000, '9087654321', 1),
+                            (102, 'balaram', 'flat 234\, bala colony', 1800, '8887654321', 2),
+                            (103, 'brahmi', 'flat 456\, nanda colony', 20000, '7777654321', 3),
+                            (104, 'ram', 'flat 678\, rama colony', 30000, '9906504321', 9),
+FOREIGN KEY constraint violation
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`ruler`.`customers`, CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`))
+
+                            (104, 'ram', 'flat 678\, rama colony', 30000, '9906504321', 4),
+
+NOT NULL constaraint violation
+                            (105, null, 'flat 900\, venky colony', 600, '9906504890', 5),
+                             ERROR 1048 (23000): Column 'cust_name' cannot be null
+
+CHECK constaraint violation
+                             (105, 'venky', 'flat 900\, venky colony', 600, '9906504890', 5)
+                              ERROR 3819 (HY000): Check constraint 'customers_chk_1' is violated.
+ 
+No Violation
+                             (105, 'venky', 'flat 900\, venky colony', 6000, '9906504890', 5)
+                             Query OK, 1 row affected (0.01 sec)
+                  
+                             (106, 'raj', 'flat 890\, raj colony', 1700, '7788990066', 6);
+
+
+insert into orders values(10011, '2025-02-12', 2200, 'shipped', 102),
+                         (10012, '2026-01-01', 3000, 'out for delivery', 104),
+                         (10013, '2026-01-06', 4000, 'shpped', 108);
+
+FOREIGN KEY constraint violation
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`ruler`.`orders`, CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customers` (`cust_id`))
+
+No Violation
+insert into orders values(10011, '2025-02-12', 2200, 'shipped', 102),
+                         (10012, '2026-01-01', 3000, 'out for delivery', 104),
+                         (10013, '2026-01-06', 4000, 'shipped', 105);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0  
+
+DEFAULT 'new' will be stored in order_status
+                         insert into orders(order_id, cust_id) values(10014, 101);
+                         Query OK, 1 row affected (0.00 sec) 
+
+CHECK constraint violation   
+insert into orders(order_id, cust_id, total_price) values(10014, 103, 0);
+ERROR 3819 (HY000): Check constraint 'orders_chk_1' is violated.  
+
+No Violation         
+ insert into orders(order_id, cust_id, total_price) values(10015, 103, 100);
+Query OK, 1 row affected (0.01 sec)
+
+You can implicitly insert null in default column
+insert into orders values(10016, '2026-01-02', 400, null, 106);
+Query OK, 1 row affected (0.01 sec)
+
++----------+------------+-------------+------------------+---------+
+| order_id | order_date | total_price | order_status     | cust_id |
++----------+------------+-------------+------------------+---------+
+|    10011 | 2025-02-12 |        2200 | shipped          |     102 |
+|    10012 | 2026-01-01 |        3000 | out for delivery |     104 |
+|    10013 | 2026-01-06 |        4000 | shpped           |     105 |
+|    10014 | NULL       |        NULL | New              |     101 |
+|    10015 | NULL       |         100 | New              |     103 |
+|    10016 | 2026-01-02 |         400 | NULL             |     106 |
++----------+------------+-------------+------------------+---------+
+6 rows in set (0.02 sec)
+
+TRY DELETING DATA FROM TABLES
+delete from city;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`ruler`.`customers`, CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`))
+
+You can not delete, because you are using city_id as foreign key in customers table, if you want to delete, delete customers first.
+
+delete from customers;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`ruler`.`orders`, CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customers` (`cust_id`))
+
+You can not delete, because you are using cust_id as foreign key in orders table, if you want to delete, delete orders first.
+
+Now deletion will happen
+delete from orders;
+delete from customers;
+delete from city;
+
+UPDATE behaviour
+WITHOUT ON UPDATE CASCADE
+When you try to update primary key in parent table, you will get 'a foreign key constraint fails' error, if the primary key is referenced by a child table.
+When columns other than the primary key in the parent table are updated, nothing is reflected in the child table.
+When columns other than the foreign key in the child table is updated, nothing is reflected in the parent table.
+when you try to update foreign key value, it must be present in parent table, other wise you will get error 'a foreign key constraint fails'
+
+DELETE behaviour
+WITHOUT ON DELETE CASCADE
+When you try to delete any row in the parent table, you will get 'a foreign key constraint fails' error,
+You can delete any row in the child table, nothing is reflected in parent table.
+
+
+CASCADE
+CASCADE means When a change happens in the parent table, the same change is automatically propagated to the related rows in the child table. 
+It is used only with FOREIGN KEY constraints.
+
+UPDATE behaviour
+ON UPDATE CASCADE
+When PRIMARY KEY is updated with, only the related FOREIGN KEY values in child tables are updated. Nothing else is affected.
+When columns other than the primary key in the parent table are updated, nothing is reflected in the child table.
+When columns other than the foreign key in the child table is updated, nothing is reflected in the parent table.
+when you try to update foreign key value, it must be present in parent table, other wise you will get error 'a foreign key constraint fails'
+
+DELETE behaviour
+ON DELETE CASCADE
+When any row is deleted from the parent table, all related rows in the child table are automatically deleted.
+When any row is deleted from the child table, nothing is reflected in the parent table.
+
+create table cas_par(par_id int primary key, par_name varchar(20) not null, par_age int check(par_age>=40));
+
+create table cas_child(child_id int primary key, child_name varchar(20) not null, child_age int check(child_age>=18), child_email varchar(70) unique, child_earn decimal(10,2) default 0, par_id int, foreign key(par_id) references cas_par(par_id) on update cascade on delete cascade);
+
+
+
+ADDING CONSTRAINTS AFTER TABLE CREATION
+
+PARENT table
+create table for_add_fk(fk_id int primary key, fk_name varchar(20));
+
+CHILD table
+create table add_cons(emp_id int, first_name varchar(20), email varchar(80), age int, salary float, fk_id int);
+
+ADDING CONSTRAINTS
+Why do we give names to constraints?
+
+If you give names, you can identify, modify, or drop them later.
+If you dont give name, DBMS will create an ugly, unpredictable auto-generated name.
+
+Column level constraints don't need names 
+NOT NULL
+alter table add_cons modify first_name varchar(20) not null;
+
+DEFAULT: Default value must match column datatype
+alter table add_cons modify salary float default 'no salary';
+ERROR 1067 (42000): Invalid default value for 'salary'
+
+alter table add_cons modify salary float default 0;
+
+
+Only table-level constraints really need names
+PRIMARY KEY(MySQL allows naming a PRIMARY KEY, but internally treats it as PRIMARY, and it cannot be dropped by name)
+alter table add_cons modify emp_id int primary key;
+alter table add_cons add constraint pk_key primary key(emp_id);
+
+UNIQUE
+alter table add_cons modify email varchar(70) unique;
+alter table add_cons add constraint uni_email unique(email);
+
+CHECK
+alter table add_cons modify age int check(age>=18);
+alter table add_cons add constraint ch_age check(age>=18);
+
+FOREIGN KEY
+alter table add_cons add constraint name_fk foreign key(fk_id) references for_add_fk(fk_id);
+
+GIVING NAMES TO TABLE LEVEL CONSTRAINTS WHILE CREATING/DEFINING TABLE ITSELF.
+create table add_cons(
+    emp_id int,
+    first_name varchar(20) not null,
+    email varchar(80),
+    age int,
+    salary float default 0,
+    fk_id int,
+    constraint pk_key primary key (emp_id),
+    constraint uni_email unique (email),
+    constraint ch_age check (age >= 18),
+    constraint name_fk foreign key (fk_id) references for_add_fk(fk_id)
+);
+
+DROPPING CONSTRAINTS
+NOT NULL: NOT NULL is removed by allowing NULL.
+alter table add_cons modify column first_name varchar(20) null;
+
+DEFAULT:
+alter table add_cons alter column salary drop default;
+
+
+PRIMARY KEY: if name is given or not given
+alter table add_cons drop primary key; 
+
+UNIQUE: UNIQUE is implemented internally as an index, so MySQL uses DROP INDEX.
+alter table add_cons drop index uni_email;
+alter table add_cons drop constraint uni_email;
+
+CHECK:
+alter table add_cons drop check ch_age;
+alter table add_cons drop constraint ch_age;
+
+FOREIGN KEY:
+alter table add_cons drop foreign key name_fk;
+
+Without using the DROP keyword, we can remove constraints by redefining the column using MODIFY.(Dont use this bro)
+alter table add_cons modify emp_id int;
+alter table add_cons modify column first_name varchar(20);
+alter table add_cons modify column email varchar(70);
+alter table add_cons modify column age int;
+alter table add_cons modify column salary float;
+alter table add_cons modify column fk_id int;

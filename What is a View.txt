@@ -1,0 +1,85 @@
+What is a View?
+
+A view is a virtual table created from a SELECT query.
+It looks like a table, but does not store data .Data is always fetched from the base tables.
+
+Why Do We Use Views?
+To Simplify Complex Queries,
+To Improve Security (Hide Sensitive Columns)
+
+How to Create a View:
+
+CREATE VIEW view_name AS
+SELECT column1, column2
+FROM table_name;
+
+Types of Views: Updatable and Non-Updatable Views
+
+A view is updatable when:
+
+Based on only one table
+Contains no DISTINCT
+Contains no GROUP BY, HAVING
+Contains no aggregate functions (SUM, AVG, COUNT)
+Contains no set operators (UNION, INTERSECT)
+Columns in view must map directly to base table columns
+Primary key column must be included
+
+If these rules fail → view becomes non-updatable (read-only).
+
+DDL work on all views: but only certain DDL operations apply to views
+1️⃣ CREATE VIEW
+
+CREATE VIEW v1 AS
+SELECT customerid, contactname
+FROM customers;
+
+2️⃣ ALTER VIEW
+You cannot rename a column in a view directly, add a new column, change datatype, drop a column.
+but you can rename the column and add column by rewriting the complete SELECT query
+
+adding new column:
+
+CREATE OR REPLACE VIEW v1 AS
+SELECT customerid, contactname, city
+FROM customers;
+
+renaming the column by using AS:
+
+CREATE OR REPLACE VIEW v1 AS
+SELECT customerid AS cid, contactname AS cname
+FROM customers;
+
+3️⃣ DROP VIEW
+we can drop the view not the column
+
+DROP VIEW v1;
+
+4️⃣ RENAME VIEW
+to rename view not the column, we will use:
+
+RENAME TABLE old_view TO new_view;
+
+DML works only on updatable Views:
+
+insert
+update
+delete
+
+DQL work on all views:
+
+SELECT * FROM view_name;
+
+TCL work on all views: But only affects changes made through DML
+
+If you update a view and it updates the base table → TCL works
+If the view is not updatable → no DML → TCL has nothing to commit/rollback
+
+DCL work on all views:
+You can grant or revoke permissions on ANY view.
+
+Commands:
+
+GRANT, REVOKE
+
+GRANT SELECT ON view_name TO user1;

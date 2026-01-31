@@ -1,0 +1,95 @@
+What is CASE?
+CASE is a conditional expression in MySQL that evaluates conditions from top to bottom and returns a value based on 
+the first true/matching condition and stops going through the next conditions, if none of the conditions are true then 
+returns the default value specified in else clause(or NULL if ELSE is omitted).
+
+CASE expression works like IF–ELSE logic in SQL. (We can't use if else in sql but we can use in pl-sql)
+
+Syntax: Simple CASE expression: (Equality check)
+Used when the same column/expression is compared to multiple values.
+
+CASE expression
+    WHEN value1 THEN result1
+    WHEN value2 THEN result2
+    ELSE default_result
+END
+
+Example: (In this most salaries will fall into low_sal, because This works only for exact matches)
+select employee_id, first_name, salary, 
+case salary 
+    when 150000 then 'High_sal' 
+    when 120000 then 'Medium_sal' 
+    else 'low_sal' 
+end as types_of_salary
+from employees;
+
+Syntax: Searched CASE expression:(Condition check)
+Used when conditions involve ranges, operators, or multiple columns.
+
+CASE
+    WHEN condition1 THEN result1
+    WHEN condition2 THEN result2
+    ELSE default_result
+END
+
+Example1:
+select employee_id, first_name, salary, 
+case 
+    when salary>=150000 then 'High_sal' 
+    when salary>=120000 then 'Medium_sal' 
+    else 'low_sal' 
+end as types_of_salary
+from employees;
+
+Example2:
+select empid, empname, gender as gender_code, case when gender= 'M' then 'male' when gender= 'F' then 'female' when gender= 'T' then 'transgender' when gender= 'D' or gender is null then 'don''t want to disclose' else 'others' end as gender from employ;
+
+What is DECODE? (It works like a simple CASE expression)
+DECODE is an Oracle-specific conditional expression that compares a column or expression with multiple search values 
+using equality (=) and returns the result for the first matching value. If no match is found, it returns the default 
+value if provided; otherwise, it returns NULL.
+
+It is useful when we need to compare same column/expression with multiple values.
+
+Syntax: DECODE(expression, search1, result1, search2, result2, ...,default_result)
+
+Example1:
+select employee_id, first_name, decode(salary, 150000, 'high_sal', 120000, 'medium_sal', 'low_sal') as types_of_salary from employees;
+ERROR 1305 (42000): FUNCTION pg.decode does not exist
+This error occurs because DECODE exists only in Oracle, not in MySQL
+
+Example2:
+SELECT empid, empname, gender AS gender_code, DECODE(gender, 'M', 'male', 'F', 'female', 'T', 'transgender', 'D', 'don''t want to disclose', NULL, 'don''t want to disclose', 'others') AS gender FROM employ;
+ERROR 1305 (42000): FUNCTION pg.DECODE does not exist
+
+CASE vs DECODE — Differences Table
+
+| Feature               | CASE                                          | DECODE                        |
+| --------------------- | --------------------------------------------- | ----------------------------- |
+| Type                  | Conditional **expression** (SQL)              | Conditional **expression**    |
+| SQL standard          | Standard SQL                                  | Oracle-specific               |
+| Supported comparisons | =, >, <, <=, >=, AND, OR, NOT, BETWEEN, LIKE  | Equality (=) only             |
+| Multiple columns      | Supported                                     | Not supported                 |
+| Readability           | High                                          | Low                           |
+| NULL comparison       | Standard SQL behavior null=null gives null    | NULL = NULL treated as TRUE   |
+| Portability           | Works across DBs                              | Oracle only    |
+| Modern usage          | preferred, modern SQL                         | non-standard, legacy SQL |
+
+
+
+-- Use Case: Derive the monthly tax amount of all employees based on their yearly salary.
+
+Version 1 — Without casting and ORDER BY
+select empid, empname, salary, case when salary*12<=100000 then 0 when salary*12 between 100001 and 600000 then salary*10/100 when salary*12 between 600001 and 900000 then salary*20/100 else salary*30/100 end as tax_amount from employ;
+
+Version 2 — With decimal casting and ORDER BY
+select empid, empname, salary, case when salary*12<=100000 then 0 when salary*12 between 100001 and 600000 then cast((salary*10)/100 as decimal(10,2)) when salary*12 between 600001 and 900000 then cast((salary*20)/100 as decimal(10,2)) else cast((salary*30)/100 as decimal(10,2)) end as tax_amount from employ order by salary desc;
+
+
+
+
+
+
+
+
+

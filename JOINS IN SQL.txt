@@ -1,0 +1,481 @@
+JOINS IN SQL
+
+What is a JOIN?
+A JOIN clause is used to combine rows from two or more tables based on a related column(join keys) between them.
+
+There are 6 types of JOINs in SQL
+
+JOIN/INNER JOIN
+LEFT JOIN/LEFT OUTER JOIN
+RIGHT JOIN/RIGHT OUTER JOIN
+FULL JOIN/ FULL OUTER JOIN --> LEFT OUTER JOIN UNION RIGHT OUTER JOIN
+5. CROSS JOIN
+6. SELF JOIN
+
+
+select * from customers;
++---------+-----------+------------+--------------+
+| cust_id | cust_name | cust_pn    | cust_loc     |
++---------+-----------+------------+--------------+
+|       1 | nagraj    | 8908908900 | sr_nagar     |
+|       2 | brahmi    | 9089089080 | madhapur     |
+|       3 | rams      | 9008900800 | jubleehills  |
+|       4 | srii      | 9999000088 | dilsukhnagar |
+|       5 | teja      | 8978978970 | lakidikapool |
+|       6 | vijay     | 8889990009 | tukkuguda    |
++---------+-----------+------------+--------------+
+
+select * from orders;
++----------+------------+------------+---------+--------------+
+| order_id | order_date | order_name | cust_id | order_amount |
++----------+------------+------------+---------+--------------+
+|      101 | 2026-01-02 | bluetooth  |       3 |      2500.00 |
+|      102 | 2026-01-07 | mobile     |       1 |     35000.00 |
+|      103 | 2026-01-11 | shirt      |       3 |      1500.00 |
+|      104 | 2026-01-13 | pendrive   |       2 |      1400.00 |
+|      105 | 2026-01-16 | chocolates |      10 |       400.00 |
+|      106 | 2026-01-18 | laptop     |      11 |     96000.00 |
+|      107 | 2026-01-20 | pant       |       5 |      1800.00 |
+|      108 | 2026-01-21 | watch      |       3 |      5500.00 |
+|      109 | 2026-01-23 | shoe       |       1 |      1200.00 |
++----------+------------+------------+---------+--------------+
+
+JOIN/INNER JOIN:
+It returns only matching rows from both tables.
+
+Syntax:
+SELECT columns
+FROM table1 t1
+INNER JOIN table2 t2
+ON t1.col = t2.col;
+
+Example:
+select c.*, o.* from customers c inner join orders o on c.cust_id = o.cust_id;
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+| cust_id | cust_name | cust_pn    | cust_loc     | order_id | order_date | order_name | cust_id | order_amount |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+|       3 | rams      | 9008900800 | jubleehills  |      101 | 2026-01-02 | bluetooth  |       3 |      2500.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      102 | 2026-01-07 | mobile     |       1 |     35000.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      103 | 2026-01-11 | shirt      |       3 |      1500.00 |
+|       2 | brahmi    | 9089089080 | madhapur     |      104 | 2026-01-13 | pendrive   |       2 |      1400.00 |
+|       5 | teja      | 8978978970 | lakidikapool |      107 | 2026-01-20 | pant       |       5 |      1800.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      108 | 2026-01-21 | watch      |       3 |      5500.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      109 | 2026-01-23 | shoe       |       1 |      1200.00 |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+
+2. LEFT JOIN/LEFT OUTER JOIN:
+Returns all rows from the left table and only matching rows from the right table, returns null, if there is no matching row in the right table.
+
+Example:
+select c.*, o.* from customers c left outer join orders o on c.cust_id = o.cust_id;
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+| cust_id | cust_name | cust_pn    | cust_loc     | order_id | order_date | order_name | cust_id | order_amount |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+|       1 | nagraj    | 8908908900 | sr_nagar     |      109 | 2026-01-23 | shoe       |       1 |      1200.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      102 | 2026-01-07 | mobile     |       1 |     35000.00 |
+|       2 | brahmi    | 9089089080 | madhapur     |      104 | 2026-01-13 | pendrive   |       2 |      1400.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      108 | 2026-01-21 | watch      |       3 |      5500.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      103 | 2026-01-11 | shirt      |       3 |      1500.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      101 | 2026-01-02 | bluetooth  |       3 |      2500.00 |
+|       4 | srii      | 9999000088 | dilsukhnagar |     NULL | NULL       | NULL       |    NULL |         NULL |
+|       5 | teja      | 8978978970 | lakidikapool |      107 | 2026-01-20 | pant       |       5 |      1800.00 |
+|       6 | vijay     | 8889990009 | tukkuguda    |     NULL | NULL       | NULL       |    NULL |         NULL |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+
+3. RIGHT JOIN/RIGHT OUTER JOIN:
+Returns all rows from right table and only matching rows from left table, returns null, if there is no matching row in the left table.
+
+Example:
+select c.*, o.* from customers c right outer join orders o on c.cust_id = o.cust_id;
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+| cust_id | cust_name | cust_pn    | cust_loc     | order_id | order_date | order_name | cust_id | order_amount |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+|       3 | rams      | 9008900800 | jubleehills  |      101 | 2026-01-02 | bluetooth  |       3 |      2500.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      102 | 2026-01-07 | mobile     |       1 |     35000.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      103 | 2026-01-11 | shirt      |       3 |      1500.00 |
+|       2 | brahmi    | 9089089080 | madhapur     |      104 | 2026-01-13 | pendrive   |       2 |      1400.00 |
+|    NULL | NULL      | NULL       | NULL         |      105 | 2026-01-16 | chocolates |      10 |       400.00 |
+|    NULL | NULL      | NULL       | NULL         |      106 | 2026-01-18 | laptop     |      11 |     96000.00 |
+|       5 | teja      | 8978978970 | lakidikapool |      107 | 2026-01-20 | pant       |       5 |      1800.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      108 | 2026-01-21 | watch      |       3 |      5500.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      109 | 2026-01-23 | shoe       |       1 |      1200.00 |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+
+4. FULL JOIN/ FULL OUTER JOIN:
+Returns all rows from both tables, merges matching rows and returns null for all non-matching rows.
+
+MySQL does not support FULL OUTER JOIN; but it can be achieved using LEFT JOIN and RIGHT JOIN with UNION.
+
+LEFT OUTER JOIN UNION RIGHT OUTER JOIN:
+It combines the result sets of left and right joins, removes duplicate rows that appear in both results, and keeps all non-matching rows with NULL values.
+
+select c.*, o.* from customers c left outer join orders o on c.cust_id = o.cust_id union select c.*, o.* from customers c right outer join orders o on c.cust_id = o.cust_id;
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+| cust_id | cust_name | cust_pn    | cust_loc     | order_id | order_date | order_name | cust_id | order_amount |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+|       1 | nagraj    | 8908908900 | sr_nagar     |      109 | 2026-01-23 | shoe       |       1 |      1200.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      102 | 2026-01-07 | mobile     |       1 |     35000.00 |
+|       2 | brahmi    | 9089089080 | madhapur     |      104 | 2026-01-13 | pendrive   |       2 |      1400.00 | 
+|       3 | rams      | 9008900800 | jubleehills  |      108 | 2026-01-21 | watch      |       3 |      5500.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      103 | 2026-01-11 | shirt      |       3 |      1500.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      101 | 2026-01-02 | bluetooth  |       3 |      2500.00 |
+|       4 | srii      | 9999000088 | dilsukhnagar |     NULL | NULL       | NULL       |    NULL |         NULL |
+|       5 | teja      | 8978978970 | lakidikapool |      107 | 2026-01-20 | pant       |       5 |      1800.00 |
+|       6 | vijay     | 8889990009 | tukkuguda    |     NULL | NULL       | NULL       |    NULL |         NULL |
+|    NULL | NULL      | NULL       | NULL         |      105 | 2026-01-16 | chocolates |      10 |       400.00 |
+|    NULL | NULL      | NULL       | NULL         |      106 | 2026-01-18 | laptop     |      11 |     96000.00 |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+ 
+
+LEFT OUTER JOIN UNION ALL RIGHT OUTER JOIN:
+It combines the result sets of left and right joins without removing duplicate rows and keeps all non-matching rows with NULL values.
+
+select c.*, o.* from customers c left outer join orders o on c.cust_id = o.cust_id union all select c.*, o.* from customers c right outer join orders o on c.cust_id = o.cust_id;
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+| cust_id | cust_name | cust_pn    | cust_loc     | order_id | order_date | order_name | cust_id | order_amount |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+|       1 | nagraj    | 8908908900 | sr_nagar     |      109 | 2026-01-23 | shoe       |       1 |      1200.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      102 | 2026-01-07 | mobile     |       1 |     35000.00 |
+|       2 | brahmi    | 9089089080 | madhapur     |      104 | 2026-01-13 | pendrive   |       2 |      1400.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      108 | 2026-01-21 | watch      |       3 |      5500.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      103 | 2026-01-11 | shirt      |       3 |      1500.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      101 | 2026-01-02 | bluetooth  |       3 |      2500.00 |
+|       4 | srii      | 9999000088 | dilsukhnagar |     NULL | NULL       | NULL       |    NULL |         NULL |
+|       5 | teja      | 8978978970 | lakidikapool |      107 | 2026-01-20 | pant       |       5 |      1800.00 |
+|       6 | vijay     | 8889990009 | tukkuguda    |     NULL | NULL       | NULL       |    NULL |         NULL |
+|       3 | rams      | 9008900800 | jubleehills  |      101 | 2026-01-02 | bluetooth  |       3 |      2500.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      102 | 2026-01-07 | mobile     |       1 |     35000.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      103 | 2026-01-11 | shirt      |       3 |      1500.00 |
+|       2 | brahmi    | 9089089080 | madhapur     |      104 | 2026-01-13 | pendrive   |       2 |      1400.00 |
+|    NULL | NULL      | NULL       | NULL         |      105 | 2026-01-16 | chocolates |      10 |       400.00 |
+|    NULL | NULL      | NULL       | NULL         |      106 | 2026-01-18 | laptop     |      11 |     96000.00 |
+|       5 | teja      | 8978978970 | lakidikapool |      107 | 2026-01-20 | pant       |       5 |      1800.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      108 | 2026-01-21 | watch      |       3 |      5500.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      109 | 2026-01-23 | shoe       |       1 |      1200.00 |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+UNION ALL is faster because it doesn’t remove duplicates, while UNION spends extra time sorting and comparing rows to eliminate duplicates.
+
+
+5. CROSS JOIN:
+Returns Cartesian product(Every row from table1 × every row from table2).
+No join condition required
+
+select c.*, o.* from customers c cross join orders o;
+select c.*, o.* from customers c, orders o;
+For both queries, we will get 54 rows output(6*9)
+
+6. SELF JOIN:
+Joining a table with itself.
+We will use table aliases to treat the same table as two different tables.
+SELF JOIN is used when rows in the same table are related to other rows.
+SELF JOIN is a concept, not a keyword.
+
+Example: Employee & Manager (same table)
+select * from employee;
++--------+----------+------------+------------+
+| emp_id | emp_name | emp_salary | manager_id |
++--------+----------+------------+------------+
+|      1 | Venky    |  140000.00 |       NULL |
+|      2 | Brahmi   |  130000.00 |          1 |
+|      3 | Karthik  |  120000.00 |          1 |
+|      4 | Gopi     |   90000.00 |          2 |
+|      5 | Rams     |   80000.00 |          3 |
++--------+----------+------------+------------+
+
+employees with their managers(recommended)
+select e.emp_name as employee, m.emp_name as manager from employee e inner join employee m on e.manager_id = m.emp_id;
++----------+---------+
+| employee | manager |
++----------+---------+
+| Brahmi   | Venky   |
+| Karthik  | Venky   |
+| Gopi     | Brahmi  |
+| Rams     | Karthik |
++----------+---------+
+
+select e.*, m.* from employee e inner join employee m on e.manager_id = m.emp_id;
++--------+----------+------------+------------+--------+----------+------------+------------+
+| emp_id | emp_name | emp_salary | manager_id | emp_id | emp_name | emp_salary | manager_id |
++--------+----------+------------+------------+--------+----------+------------+------------+
+|      2 | Brahmi   |  130000.00 |          1 |      1 | Venky    |  140000.00 |       NULL |
+|      3 | Karthik  |  120000.00 |          1 |      1 | Venky    |  140000.00 |       NULL |
+|      4 | Gopi     |   90000.00 |          2 |      2 | Brahmi   |  130000.00 |          1 |
+|      5 | Rams     |   80000.00 |          3 |      3 | Karthik  |  120000.00 |          1 |
++--------+----------+------------+------------+--------+----------+------------+------------+      
+
+select e.*, m.* from employee e left join employee m on e.manager_id = m.emp_id;
++--------+----------+------------+------------+--------+----------+------------+------------+
+| emp_id | emp_name | emp_salary | manager_id | emp_id | emp_name | emp_salary | manager_id |
++--------+----------+------------+------------+--------+----------+------------+------------+
+|      1 | Venky    |  140000.00 |       NULL |   NULL | NULL     |       NULL |       NULL |
+|      2 | Brahmi   |  130000.00 |          1 |      1 | Venky    |  140000.00 |       NULL |
+|      3 | Karthik  |  120000.00 |          1 |      1 | Venky    |  140000.00 |       NULL |
+|      4 | Gopi     |   90000.00 |          2 |      2 | Brahmi   |  130000.00 |          1 |
+|      5 | Rams     |   80000.00 |          3 |      3 | Karthik  |  120000.00 |          1 |
++--------+----------+------------+------------+--------+----------+------------+------------+
+
+managers with their employees (use based on requirement)
+select e.*, m.* from employee e inner join employee m on e.emp_id= m.manager_id;
++--------+----------+------------+------------+--------+----------+------------+------------+
+| emp_id | emp_name | emp_salary | manager_id | emp_id | emp_name | emp_salary | manager_id |
++--------+----------+------------+------------+--------+----------+------------+------------+
+|      1 | Venky    |  140000.00 |       NULL |      2 | Brahmi   |  130000.00 |          1 |
+|      1 | Venky    |  140000.00 |       NULL |      3 | Karthik  |  120000.00 |          1 |
+|      2 | Brahmi   |  130000.00 |          1 |      4 | Gopi     |   90000.00 |          2 |
+|      3 | Karthik  |  120000.00 |          1 |      5 | Rams     |   80000.00 |          3 |
++--------+----------+------------+------------+--------+----------+------------+------------+
+
+POINTS TO REMEMBER
+
+We can achieve INNER JOIN with WHERE clause, but INNER JOIN is preferred, because it is 
+more readable, 
+easier to debug, 
+avoids accidental Cartesian joins
+
+Old style (implicit join):
+select c.*, o.* from customers c, orders o where c.cust_id = o.cust_id;
+Modern style (explicit join):
+select c.*, o.* from customers c inner join orders o on c.cust_id = o.cust_id;
+
+2. Be careful where there are NULLs in join keys, NULL never matches with another NULL.
+   NULL = NULL  ❌ (UNKNOWN)
+
+   INNER JOIN → row is ignored
+   LEFT/RIGHT JOIN → row appears with NULLs
+
+3. In real time we mostly use INNER, LEFT OUTER and SELF joins.
+   FULL OUTER JOIN → rare
+   CROSS JOIN → almost never (unless intentional)
+
+4. we avoid RIGHT JOIN and rewrite it as LEFT JOIN for readability.
+   Difference is only table position, not result.
+   TABLE_A RIGHT OUTER JOIN TABLE_B is same as TABLE_B LEFT OUTER JOIN TABLE_A.
+   customers c right outer join orders o is same as orders o left outer join customers c
+
+5. Avoid using Cartesian joins as they are costly (performance slow).
+
+   select c.*, o.* from customers c, orders o;
+   If A has 100 rows and B has 200 rows
+   Result = 20,000 rows
+🧠 Use only if intentionally required, otherwise it’s a bug.
+
+6. Important points while writing joins, check
+   1). What we need in the output exactly
+       Avoid simply writing select *, instead write required columns names SELECT emp_name, order_amount
+
+   2). Performance of the query should be good
+
+   3). Query should be in readable format
+
+ORDER BY:
+LEFT JOIN appears ordered because MySQL scans the left table first,
+RIGHT JOIN appears unordered because MySQL scans the right table first,
+But SQL does not guarantee row order without ORDER BY.
+
+select c.*,o.* from customers c right outer join orders o on c.cust_id = o.cust_id order by o.cust_id;
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+| cust_id | cust_name | cust_pn    | cust_loc     | order_id | order_date | order_name | cust_id | order_amount |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+|       1 | nagraj    | 8908908900 | sr_nagar     |      102 | 2026-01-07 | mobile     |       1 |     35000.00 |
+|       1 | nagraj    | 8908908900 | sr_nagar     |      109 | 2026-01-23 | shoe       |       1 |      1200.00 |
+|       2 | brahmi    | 9089089080 | madhapur     |      104 | 2026-01-13 | pendrive   |       2 |      1400.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      101 | 2026-01-02 | bluetooth  |       3 |      2500.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      103 | 2026-01-11 | shirt      |       3 |      1500.00 |
+|       3 | rams      | 9008900800 | jubleehills  |      108 | 2026-01-21 | watch      |       3 |      5500.00 |
+|       5 | teja      | 8978978970 | lakidikapool |      107 | 2026-01-20 | pant       |       5 |      1800.00 |
+|    NULL | NULL      | NULL       | NULL         |      105 | 2026-01-16 | chocolates |      10 |       400.00 |
+|    NULL | NULL      | NULL       | NULL         |      106 | 2026-01-18 | laptop     |      11 |     96000.00 |
++---------+-----------+------------+--------------+----------+------------+------------+---------+--------------+
+
+
+PRACTICE: SELF JOIN
+select * from employ;
++---------+--------------+-----------+------------+------------+------------+-----------+-----------+--------+---------+
+| empp_id | first_name   | last_name | email      | ph_no      | hire_date  | job_id    | salary    | man_id | dept_id |
++---------+--------------+-----------+------------+------------+------------+-----------+-----------+--------+---------+
+|     101 | raj          | kumar     | kumar@123  | 7890098778 | 2019-01-12 | sr_eng    | 350000.00 |   NULL |      10 |
+|     102 | ram          | babu      | babu@123   | 9090909090 | 2020-09-22 | jr_eng    |  30000.00 |    101 |      30 |
+|     103 | ashok        | bro       | bro@123    | 8908908900 | 2021-03-23 | qul_ass   |  60000.00 |    101 |      20 |
+|     104 | brahmi       | sadhu     | sadhu@123  | 9879879870 | 2018-12-30 | sr_tester |  40000.00 |    103 |      10 |
+|     105 | lakshmi      | priya     | priya@123  | NULL       | 2022-12-12 | data_eng  |  78000.00 |   NULL |      20 |
+|     106 | sandhya      | sanji     | sanji@321  | 9898989889 | 2023-03-21 | jr_dlpr   |  55000.00 |    103 |      50 |
+|     107 | tirupatamma  | thippu    | thippu@123 | 9789987689 | 2024-07-09 | jr_eng    |  76000.00 |    105 |    NULL |
+|     108 | haritha      | hari      | hari@123   | NULL       | 2024-02-25 | devps_eng |  66000.00 |    107 |    NULL |
+|     109 | afreen       | shaik     | shaik@123  | 9087654321 | 2019-06-28 | fend_dlpr |  88000.00 |    103 |      30 |
+|     110 | koteswaramma | koti      | koti@123   | NULL       | 2025-05-29 | bck_dlpr  |  56000.00 |    101 |      20 |
++---------+--------------+-----------+------------+------------+------------+-----------+-----------+--------+---------+
+
+--get manager names of all employees.
+select e.emp_id, e.emp_name as employee, e.manager_id, m.emp_name as manager from employee e inner join employee m on e.manager_id = m.emp_id;
++--------+----------+------------+---------+
+| emp_id | employee | manager_id | manager |
++--------+----------+------------+---------+
+|      2 | Brahmi   |          1 | Venky   |
+|      3 | Karthik  |          1 | Venky   |
+|      4 | Gopi     |          2 | Brahmi  |
+|      5 | Rams     |          3 | Karthik |
++--------+----------+------------+---------+
+
+select e.empp_id, concat(e.first_name, ' ', e.last_name) as employee, e. dept_id, e.man_id, concat(m.first_name, ' ', m.last_name) as manager from employ e inner join employ m on e.man_id= m.empp_id;
++---------+--------------------+---------+--------+--------------------+
+| empp_id | employee           | dept_id | man_id | manager            |
++---------+--------------------+---------+--------+--------------------+
+|     102 | ram babu           |      30 |    101 | raj kumar          |
+|     103 | ashok bro          |      20 |    101 | raj kumar          |
+|     104 | brahmi sadhu       |      10 |    103 | ashok bro          |
+|     106 | sandhya sanji      |      50 |    103 | ashok bro          |
+|     107 | tirupatamma thippu |    NULL |    105 | lakshmi priya      |
+|     108 | haritha hari       |    NULL |    107 | tirupatamma thippu |
+|     109 | afreen shaik       |      30 |    103 | ashok bro          |
+|     110 | koteswaramma koti  |      20 |    101 | raj kumar          |
++---------+--------------------+---------+--------+--------------------+
+
+--get manager names of all employees working in dept 10 and 30.
+--INNER JOIN with 'AND' in 'ON' condition
+
+INNER JOIN returns ONLY rows that satisfy the ON condition--> e.man_id= m.empp_id and e.dept_id in (10,30)
+Does a manager exist? --> Is dept_id 10 or 30? --> If BOTH yes → row survives --> If ANY no → row is removed
+select e.empp_id, concat(e.first_name, ' ', e.last_name) as employee, e. dept_id, e.man_id, concat(m.first_name, ' ', m.last_name) as manager from employ e inner join employ m on e.man_id= m.empp_id and e.dept_id in (10,30);
++---------+--------------+---------+--------+-----------+
+| empp_id | employee     | dept_id | man_id | manager   |
++---------+--------------+---------+--------+-----------+
+|     102 | ram babu     |      30 |    101 | raj kumar |
+|     104 | brahmi sadhu |      10 |    103 | ashok bro |
+|     109 | afreen shaik |      30 |    103 | ashok bro |
++---------+--------------+---------+--------+-----------+
+
+--INNER JOIN with 'WHERE' condtion. WHERE simply filters final result. 
+select e.empp_id, concat(e.first_name, ' ', e.last_name) as employee, e. dept_id, e.man_id, concat(m.first_name, ' ', m.last_name) as manager from employ e inner join employ m on e.man_id= m.empp_id where e.dept_id in (10,30);
++---------+--------------+---------+--------+-----------+
+| empp_id | employee     | dept_id | man_id | manager   |
++---------+--------------+---------+--------+-----------+
+|     102 | ram babu     |      30 |    101 | raj kumar |
+|     104 | brahmi sadhu |      10 |    103 | ashok bro |
+|     109 | afreen shaik |      30 |    103 | ashok bro |
++---------+--------------+---------+--------+-----------+
+
+--LEFT JOIN with 'AND' in 'ON' condition(we shouldn't use this)
+--Employee row is kept no matter what
+--Manager is attached ONLY IF: manager name exists, dept is 10 or 30. If condition fails → manager = NULL
+select e.empp_id, concat(e.first_name, ' ', e.last_name) as employee, e. dept_id, e.man_id, concat(m.first_name, ' ', m.last_name) as manager from employ e left join employ m on e.man_id= m.empp_id and e.dept_id in (10,30);
++---------+--------------------+---------+--------+-----------+
+| empp_id | employee           | dept_id | man_id | manager   |
++---------+--------------------+---------+--------+-----------+
+|     101 | raj kumar          |      10 |   NULL | NULL      |
+|     102 | ram babu           |      30 |    101 | raj kumar |
+|     103 | ashok bro          |      20 |    101 | NULL      |
+|     104 | brahmi sadhu       |      10 |    103 | ashok bro |       
+|     105 | lakshmi priya      |      20 |   NULL | NULL      |
+|     106 | sandhya sanji      |      50 |    103 | NULL      |
+|     107 | tirupatamma thippu |    NULL |    105 | NULL      |
+|     108 | haritha hari       |    NULL |    107 | NULL      |
+|     109 | afreen shaik       |      30 |    103 | ashok bro |
+|     110 | koteswaramma koti  |      20 |    101 | NULL      |
++---------+--------------------+---------+--------+-----------+
+
+--LEFT JOIN with 'WHERE' condition. WHERE simply filters final result.
+select e.empp_id, concat(e.first_name, ' ', e.last_name) as employee, e. dept_id, e.man_id, concat(m.first_name, ' ', m.last_name) as manager from employ e left join employ m on e.man_id= m.empp_id where e.dept_id in (10,30);
++---------+--------------+---------+--------+-----------+
+| empp_id | employee     | dept_id | man_id | manager   |
++---------+--------------+---------+--------+-----------+
+|     101 | raj kumar    |      10 |   NULL | NULL      |
+|     102 | ram babu     |      30 |    101 | raj kumar |
+|     104 | brahmi sadhu |      10 |    103 | ashok bro |
+|     109 | afreen shaik |      30 |    103 | ashok bro |
++---------+--------------+---------+--------+-----------+
+
+
+JOINS with SUBQUERIES
+---Get department name(departments table), city, state(locations table) info of employees(employ table).
+select e.empp_id, e.first_name, e.last_name, dept_loc.dept_name, dept_loc.city, dept_loc.state_province 
+from employ e inner join 
+(select d.dept_id, dept_name, l.city, l.state_province from departments d inner join locations l on d.loc_id= l.loc_id) as dept_loc 
+on e.dept_id=dept_loc.dept_id;
++---------+--------------+-----------+-----------+------------+----------------+
+| empp_id | first_name   | last_name | dept_name | city       | state_province |
++---------+--------------+-----------+-----------+------------+----------------+
+|     101 | raj          | kumar     | IT        | Hyderabad  | Telangana      |
+|     102 | ram          | babu      | HR        | Bnaglore   | Karnataka      |
+|     103 | ashok        | bro       | executive | Vizag      | AP             |
+|     104 | brahmi       | sadhu     | IT        | Hyderabad  | Telangana      |
+|     105 | lakshmi      | priya     | executive | Vizag      | AP             |
+|     106 | sandhya      | sanji     | Sales     | Maharastra | Pune           |
+|     109 | afreen       | shaik     | HR        | Bnaglore   | Karnataka      |
+|     110 | koteswaramma | koti      | executive | Vizag      | AP             |
++---------+--------------+-----------+-----------+------------+----------------+
+✅ Logical execution
+departments JOIN locations
+Result becomes temporary table dept_loc
+employees JOIN dept_loc
+
+IMPORTANT INTERVIEW QUESTION
+Below are 2 tables with one column in each, what is the output number of records after each type of join?
+
+select * from table_a;
++------+
+| id   |
++------+
+|    1 |
+|    2 |
+|    1 |
+|    3 |
+| NULL |
++------+
+
+select * from table_b;
++------+
+| id   |              select a.id, b.id from table_a a inner join table_b b on a.id= b.id;           INNER JOIN --- 1+2+1 = 4
++------+              select a.id, b.id from table_a a left join table_b b on a.id= b.id;            LEFT JOIN --- 4+1+1= 6
+|    1 |              select a.id, b.id from table_a a right join table_b b on a.id= b.id;           RIGHT JOIN --- 4+1+1+1= 7
+|    2 |              select a.id, b.id from table_a a left join table_b b on a.id = b.id union      FULL JOIN --- 4+1+1+1+1+1= 9, UNION --5, UNION ALL--13
+|    2 |              select a.id, b.id from table_a a right join table_b b on a.id= b.id; 
+|    4 |              select a.id, b.id from table_a a cross join table_b b;                         CROSS JOIN --- 30
+| NULL |
+| NULL |
++------+
+
+select a.id, b.id from table_a a left join table_b b on a.id = b.id union select a.id, b.id from table_a a right join table_b b on a.id= b.id;
++------+------+
+| id   | id   |
++------+------+
+|    1 |    1 |
+|    2 |    2 |
+|    3 | NULL |
+| NULL | NULL |
+| NULL |    4 |
++------+------+
+5 rows in set (0.00 sec)
+
+select a.id, b.id from table_a a left join table_b b on a.id = b.id union all select a.id, b.id from table_a a right join table_b b on a.id= b.id;
++------+------+
+| id   | id   |
++------+------+
+|    1 |    1 |
+|    2 |    2 |
+|    2 |    2 |
+|    1 |    1 |
+|    3 | NULL |
+| NULL | NULL |
+|    1 |    1 |
+|    1 |    1 |
+|    2 |    2 |
+|    2 |    2 |
+| NULL |    4 |
+| NULL | NULL |
+| NULL | NULL |
++------+------+
+13 rows in set (0.00 sec)
+
+SNOW FLAKE FULL OUTER JOIN'S RESULT
+a.id | b.id
+-----+-----
+1    | 1
+1    | 1
+2    | 2
+2    | 2
+3    | NULL
+NULL | NULL
+NULL | 4
+NULL | NULL
+NULL | NULL
+9 rows in set
+
