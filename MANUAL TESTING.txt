@@ -1,0 +1,714 @@
+MANUAL TESTING
+
+Phase1: Software testing concepts.
+Phase2: Software testing project.
+Phase3: Agile tool -Jira.
+
+What is software?
+Software is a set of programs used to do a specific task on a computer.
+Software is a set of programs, instructions, and data that tells a computer what to do and how to do it.
+
+Who develops?
+Software is developed by software developers based on customer requirements.
+
+Project:
+Software developed for a specific customer /client based on their requirements is called a project.
+Product:
+Software developed based on market requirements is called a product.
+
+Service  based companies:
+Companies that develop projects are called service-based companies.
+Ex: TCS, Infosys, Wipro, HCL, Accenture, Cognizant.
+
+Product based companies:
+Companies that develop products are called product-based companies.
+Ex: Google, Microsoft, Amazon, Apple, Meta (Facebook), Netflix.
+
+Types of Software: 
+1. Free Software
+Software that can be used without paying money.
+Examples:
+Google Chrome
+WhatsApp
+Gmail
+Google Maps
+Skype
+Zoom (free version)
+
+2. Open Source Software
+Software whose source code is freely available and can be modified by anyone.
+Examples:
+Android
+VLC Media Player
+Linux
+MySQL
+PostgreSQL
+Apache
+Firefox
+
+3. Licensed (Paid) Software
+Software that must be purchased and used with a legal license.
+Examples:
+Microsoft Windows
+MS Word / MS Office / MS Excel
+Oracle Database
+Adobe Photoshop
+
+
+
+
+HOW SOFTWARE IS DEVELOPED ?
+Software is developed by a process called SDLC.
+
+SDLC (Software Development Life Cycle)
+1. Requirement Analysis
+Customer explains their needs and expectations
+Business analysts and managers collect requirements
+Requirements are documented (SRS)
+📌 Example: What features the software should have
+
+2. Planning
+Project plan is prepared
+Time, cost, resources, and tools are decided
+Risks are identified
+📌 Example: How long the project will take and how many people are needed
+
+3. Design
+System architecture is designed
+UI design and database design are prepared
+📌 Example: Screens, flow, and structure of the application
+
+4. Development (Coding)
+Developers write code using programming languages
+Each module is developed separately
+📌 Example: Login, registration, payment modules
+
+5. Testing
+Testers check the software for defects
+Ensure software works as per requirements
+📌 Example: Checking login with valid and invalid inputs
+
+6. Deployment
+Software is released to the customer or market
+Installed in production environment
+📌 Example: Application goes live
+
+7. Maintenance
+Bugs are fixed
+New features are added if needed
+📌 Example: Updates and enhancements
+
+
+WHY SOFTWARE IS TESTED ?
+Software is tested to find whether the software is working as per customer/client requirements without defects.
+
+HOW SOFTWARE IS TESTED ?
+Software is tested by a process called STLC.
+
+STLC (Software Testing Life Cycle)
+1. Requirement Analysis
+Tester understands requirements
+Identifies testable features
+Prepares test scenarios
+📌 Example: Understanding login requirements
+
+2. Test Planning
+Test strategy is prepared
+Test effort, time, and resources are estimated
+Tools and environments are decided
+📌 Example: Deciding what and how to test
+
+3. Test Case Design/ Development
+Test cases and test data are written
+Positive and negative scenarios are covered
+📌 Example: Writing login test cases
+
+4. Test Environment Setup
+Hardware and software setup is done
+Test environment is prepared
+📌 Example: Setting up test server and database
+
+5. Test Execution
+Test cases are executed
+Actual results are compared with expected results
+Defects are logged in defect tracking tool (JIRA)
+📌 Example: Executing login test cases
+
+6. Defect Reporting and Tracking
+Bugs are reported
+Bugs are tracked until closure
+📌 Example: Logging a defect in JIRA
+
+7. Test Closure
+Test summary report is prepared
+Test results are documented
+Lessons learned are noted
+📌 Example: Final testing sign-off
+
+
+So.. In the software development process, both programmers/developers and testers/QA are involved.
+
+Levels of Software Testing
+
+WHITE BOX TESTING(knowing the internal code/logic/source code)
+1. Unit Testing
+Testing of individual units(function, method, class) or modules of code.
+Done by developers
+Example:
+Login Module: validate Username --> validate Password --> authenticate User.
+Payment Module: select Payment Method --> process Payment --> generate Receipt.
+
+2. Integration Testing
+Testing whether two or more integrated modules work together correctly.
+Done by developers
+Example:
+Login module + Database
+Payment module + Bank gateway
+
+BLACK BOX TESTING(without knowing the internal code/logic/source code)
+3. System Testing
+Testing the complete and integrated software. 
+Done by testers (QA)
+Example:
+tests end-to-end functionality
+Login → Add product → Make payment → Logout
+
+4. User Acceptance Testing
+Testing whether the software meets customer requirements.
+Done by Customer / Client / End users
+
+Example:
+Client verifies whether software meets expectations
+
+
+Types of SDLC models:
+Waterfall, V-Model, Agile, Fish Model, Spiral, Incremental, Iterative, RAD, Prototype, Big Bang, DevOps.
+
+V-MODEL (Verification & Validation Model)
+Development and Testing happen in parallel
+For each development phase, there is a corresponding testing phase
+It is used in Small to Medium size projects.
+Best when requirements are stable and fixed
+
+Business(BRS)/User Requirements(URS)/(CRS)   ↔   User Acceptance Testing
+System Requirements (SRS)                    ↔   System Testing
+High Level Design (HLD)                      ↔   Integration Testing
+Low Level Design (LLD)                       ↔   Unit Testing
+                                          Coding
+
+Verification/Static testing
+Verification or static testing is the process of reviewing software documents and designs without executing the code to ensure correctness and completeness.
+
+Verification is performed using static testing techniques:
+Reviews: Checking the correctness and completeness of documents to identify defects and provide feedback.
+
+Walkthroughs: An informal/semi formal meeting conducted by author, explains document for better understanding and to get feedback.
+
+Inspections: Inspection is a formal and structured review conducted by a trained moderator to identify defects using defined roles and checklists.
+Roles in Inspection:
+Moderator --> Plans and conducts the inspection meeting.
+Author --> who answers for doubts/questions
+Reader --> who reads document
+Inspector --> who identifies defects.
+Recorder --> who logs identified defects.
+
+Validation/Dynamic testing
+Validation or dynamic testing is the process of testing the software to ensure it meets customer requirements and behaves as expected.
+
+Validation is performed using Dynamic Testing
+Unit Testing
+Integration Testing
+System Testing
+User Acceptance Testing
+
+
+
+
+QA (Quality Assurance) --> QA Manager, QA Lead
+QA is process-oriented. It defines the processes or strategies to be followed in each phase to prevent defects.
+QA involves in whole SDLC process
+
+QC (Quality Control) ---> Manual Tester, Test Engineer.
+QC is product-oriented. It follows the defined process and tests the actual software to detect defects.
+QC involves in testing the software.
+
+QE (Quality Engineer) Automation Tester
+
+
+System Testing
+It is the process of testing the complete and integrated software to verify that it meets all customer and business requirements.
+
+There are two types of system testing
+Functional Testing
+Non Functional Testing
+
+Functional Testing
+It checks whether the software’s features and functions work according to business requirements.
+
+Types of functional testing
+Unit Testing
+Integration Testing
+System Testing
+Smoke Testing:
+   Testing whether the critical/major features of a new build are functioning correctly to determine if the build is stable for further testing.
+
+Example: E-commerce Website
+   Application Launch: Does Homepage loads successfully?
+   Login:       Can user login with valid credentials?
+   Search:      Can user search for products?
+   Add to Cart: Can user add a product to the cart?
+   Checkout:    Can user reach the payment page?
+
+5. Sanity Testing:
+   To check whether the specific functionality works properly after minor changes or bug fixes in the build.
+   It is performed on stable builds.
+
+Example: E-commerce Application --> Cart feature
+   Issue: Product quantity update was not reflecting in the cart.
+   Bug Fix: Quantity update functionality has been fixed.
+
+   Sanity Testing Steps:
+   Add a product to the cart
+   Update the product quantity
+   Verify that the total price updates correctly according to the changed quantity
+
+6. Regression Testing:
+   Checking whether the existing functionalities/features are working correctly after making changes(adding new feature, bug fixes) in the software.
+
+Example: E-Commerce Application
+   Existing functionalities:
+   User registration
+   Product search
+   Add to cart
+   checkout
+   If a new discount feature is added, all the above must still work.
+
+7. User Acceptance Testing (UAT)
+8. Interface Testing:
+   Checks whether the data communication between two modules or systems is working correctly.
+
+From PAVAN SIR Videos:
+Object Properties Testing
+Checks whether the individual UI elements have the correct properties and functional behavior as per requirements.
+
+Buttons & Controls
+Button enabled/disabled
+Button clickable
+Text box editable or read-only
+Drop-down shows correct values
+Disabled field cannot be edited
+
+Error Messages
+Error appears when invalid input is entered
+Correct validation message displayed
+Message disappears after correction
+
+Field Validations
+Accepts only valid format (email, numbers)
+Shows validation message for incorrect input
+Field blocks invalid characters
+
+Links Execution Testing
+Whether the link is clickable
+Whether it redirects to the correct page
+Whether it loads without error (no 404, no crash)
+
+Types of links
+Internal Links: Links that navigate within the same website/application.
+Clicking link “Profile” on Dashboard → Opens Profile page
+Clicking company logo → Redirects to Home page
+
+External Links: Links that navigate to another website/domain.
+Example:
+Clicking link “Follow us on Facebook” → Opens facebook.com
+Clicking link “Pay Now” → Redirects to Razorpay/PayPal website
+
+Broken Links: Links that do not work and show errors (like 404).
+Example:
+Clicking link “Offers” → Shows 404 Page Not Found
+Clicking link “Terms & Conditions” → Blank page opens
+
+Visibility & State
+Element is visible or hidden as required
+Default values are displayed correctly
+Checkbox / radio button selection works correctly
+
+2. Database testing
+Checks whether the data entered through the application's UI is correctly stored, updated, retrieved, and deleted in the database.
+INSERT: After user registration --> user details are stored correctly in the Users table.
+UPDATE: After updating profile information --> the updated details are reflected in the Users table.
+DELETE: After deleting a user account --> the user record is removed from the Users table.
+SELECT: After logging in --> user details are retrieved from the Users table.
+Here Manual tester executes SQL queries to verify that the data is correctly inserted, updated, deleted, or retrieved from the database.
+
+3. Error handling Testing
+
+4. Calculation Testing
+Checks whether mathematical calculations in the application are working correctly as per business requirements.
+Example: E-Commerce Application
+🖥 Scenario:
+User adds products to cart.
+Product A = ₹500
+Product B = ₹300
+Discount = 10%
+GST = 5%
+
+🔎 Tester Verifies:
+Subtotal = 800
+Discount = 80
+Tax calculated correctly
+Final total amount is correct
+
+5. Links Existence & Execution Testing
+
+6. Cookies & Sessions Testing
+Cookies Testing: Checks whether the cookies(small text files) are properly created, stored, updated, and deleted in the browser as per requirements
+
+Example 1: “Remember Me” Login
+User selects Remember Me and logs in
+Close browser → Open again → User remains logged in
+
+Tester verifies:
+Cookie is created after login
+Expiry date is set properly
+Cookie is deleted after logout
+No sensitive data(like password) stored
+
+Types of Cookies
+Session Cookie
+No fixed expiry date
+Automatically deleted when browser is closed
+Example: Login without “Remember Me”
+
+Persistent Cookie
+Has a fixed expiry date (hours/days/months)
+Remains even after browser is closed
+Example: Login with “Remember Me”
+
+Sessions Testing: Checks whether the user sessions are properly created, maintained, expired, and destroyed on the server.
+
+Example 1: Banking Application
+User logs in
+Navigates between pages
+
+Tester verifies:
+Session is created after login.
+Session remains active while navigating.
+User is automatically logged out after inactivity (5–10 minutes).
+Session ends after logout.
+After logout, protected pages cannot be opened.
+
+
+Non Functional Testing
+It checks how well the system performs, rather than what it does.
+
+Types of non functional testing
+Performance Testing
+   Checks speed, response time, and stability of system under various workloads.
+
+   a). Load Testing
+   Checks system behavior under expected load/number of users.
+
+   b). Stress Testing
+   Checks system behavior beyond normal capacity to determine breaking point.
+
+   c). Spike Testing: Checks system behavior when there is a sudden increase or decrease in users.
+       Example: Big Billion Sale – sudden traffic spike.
+
+   d). Volume Testing: Checks system performance with large amount of data.
+       Example: Testing database performance with 10 million records.
+
+
+   e). Endurance Testing (Soak Testing): Checks system performance under continuous load for a long period.
+       Example: Running system with 5,000 users for 24 hours.
+
+2. Scalability Testing
+   checks whether the system can handle increasing users, load, or data without performance issues.
+  Types of Scalability
+   Vertical Scalability (Scaling Up): Increasing the capacity(RAM, CPU, Storage) of an existing server.
+   Horizontal Scalability (Scaling Out): Increasing the number of application servers to distribute load.
+
+3. Reliability Testing
+   checks whether the system works continuously without failure for a specific period of time.
+
+4. Security Testing
+   Checks whether application is protected from unauthorized access and attacks.
+   Example: 
+   SQL Injection Testing.
+   password encryption.
+   Authentication --> Verifies valid user identity 
+   Authorization --> Decides user permissions
+
+5. Recovery Testing
+   Checks how quickly system recovers after failure or crash.
+   Example: Power failure → System restores data correctly.
+
+6. Compatibility Testing
+   Checks whether application works properly on different browsers, devices, and operating systems.
+   Example:
+   Cross-Browser → Works in all browsers(Chrome, Edge, Firefox, Safari).
+   Cross-Platform → Works on different os's (Windows, macOS, Android, iOS).
+   Device Compatibility → Works on mobile, tablet, and desktop.
+   Screen Resolution → UI looks correct on different screen sizes.
+   Hardware Compatibility → Works on different system configurations(RAM, CPU, storage).
+   Forward Compatibility → Works with newer versions of OS.
+   Backward Compatibility → Works with older versions of OS.
+
+7. Installation Testing
+   Checks whether the application installs, updates, and uninstalls properly without errors.
+
+
+
+
+GUI(Graphical User Interface) Testing:
+It is the process of verifying visual and interactive elements of a software application's user interface, to ensure it meets design specifications and provides a seamless user experience.
+
+
+GUI includes all visible components such as:
+
+Buttons
+Text boxes / text areas
+Drop-downs
+Checkboxes
+Radio buttons
+Links & hyperlinks
+Icons & images
+Menus
+Dialog boxes / pop-ups
+Labels, headings
+Scroll bars
+Fonts, colors, alignment
+
+What is Verified in GUI Testing?
+
+Layout & Alignment
+Proper spacing between elements
+No overlapping text or controls
+Consistent layout across pages
+Correct alignment (left, right, center)
+Example: Login button aligned below password field.
+
+2. Colors, Fonts & Style
+Correct font size and style
+Proper color contrast
+Readable text
+Example: Error message shown in red.
+
+3. Field Validations
+Mandatory field marked with *
+Error message aligned properly
+
+4. Buttons & Controls
+Button alignment
+Button size
+Button color
+Button position on screen
+
+5. Link Existence Testing
+Whether the link is present
+Proper placement
+Link text is correct
+
+
+6. Error Messages
+Error message color (red)
+Proper placement near field
+Readable font size
+Error message should be clear and understandable to the user
+
+7. Keyboard & Mouse Actions
+Correct tab order
+Mouse hover effects work
+Keyboard navigation works
+
+8. Images & Icons
+Images load correctly
+No broken images
+Proper size and alignment
+
+9. Screen Resolution & Zoom
+UI does not break on different screen sizes
+UI remains usable on zoom in / zoom out
+
+10. Cross-Browser GUI Behavior
+UI looks consistent across browsers (Chrome, Edge, Firefox)
+No layout distortion
+
+Usability Testing:
+It's a non-functional testing technique used to verify how easy and user-friendly a software application is when real users interact with it.
+
+If a user gets stuck at any point, there should be a help option that provides simple and clear steps to resolve the issue.
+
+
+
+SDLC -- testing (STLC)
+STLC
+
+Test design techniques comes in the 3rd phase of STLC 
+Requirement Analysis
+2. Test Planning 
+3. Test Case Design/ Development
+--> Create test scenarios
+--> Apply test design techniques (BVA, EP, Decision Table, etc.)
+--> Write detailed test cases
+--> Prepare test data
+--> Review test cases
+4. Test Environment Setup
+5. Test Execution
+6. Defect Reporting and Tracking
+7. Test Closure
+
+Boundary Value Analysis (BVA)
+It's a test design technique that tests the edge values (boundaries) of an input range, because defects usually occur at the boundaries.
+
+Where It Is Useful
+Numeric fields Age--(18–60), Salary(50000-100000), Quantity(1-100).
+Date ranges--(01-01-2026 to 31-01-2026)
+Username length(8-10 characters), Password length (8–16 characters)
+Any field with minimum and maximum limits--(File size must be between 1MB–5MB.)
+
+Example: Requirement: Password length must be 8–16 characters.
+For any input range, we check 6 values:
+
+Here, the input range is 8-16
+
+Test data/Test values:
+7 → Invalid (min-1)
+8 → Valid (min)
+9 → Valid (min+1)
+15 → Valid (max-1)
+16 → Valid (max)
+17 → Invalid (max+1)
+
+2. Equivalence Class Partitioning (ECP)
+It's a test design technique that divides input data into valid and invalid groups (partitions) where the system behaves the same for all values in that group.
+
+Where It Is Useful
+Numeric fields Age--(18–60), Salary(50000-100000), Quantity(1-100).
+Date ranges--(01-01-2026 to 31-01-2026)
+Username(8-10 characters), Password length (8–16 characters)
+Any field with minimum and maximum limits--(File size must be between 1MB–5MB)
+
+Example: Requirement: Password length must be 8–16 characters.
+
+Identify Partitions and test one value from each partition, because all values in that partition behave similarly.
+Password length < 8 → Invalid partition
+Password length 8–16 → Valid partition
+Password length > 16 → Invalid partition
+
+Test data/Test values:
+6 → Invalid
+10 → Valid
+20 → Invalid   
+
+Example: Requirement: Username must contain only small letters (a–z), Length must be 5–10 characters.
+
+Identify Partitions and test one value from each partition, because all values in that partition behave similarly.
+Length < 5 --> abc, abcd --> Invalid Partition
+Length 5-10 --> abcde, testing --> Valid Partition
+Length > 10 --> abcdefghijk, longusername --> Invalid Partition
+Length 5-10 --> Abcde, Userone --> Invalid Partition (Contains Capital Letters)
+Length 5-10 --> user1, abc12 --> Invalid Partition(Contains Numbers)
+Length 5-10 --> user@, name_1 --> Invalid Partition(Contains Special Characters)
+
+You can replace above 3 lines with this one line
+Length 5–10 & contains non a–z characters → Invalid
+
+Test data/Test values:
+abc → Invalid (less than 5)
+abcde → Valid
+abcdefghijk → Invalid (more than 10)
+Abcde → Invalid (capital letter)
+user1 → Invalid (number)
+user@ → Invalid (special character)
+ 
+3. Decision Table Testing
+It is a test design technique used when system behavior/output depends on multiple conditions.
+It lists all possible combinations of conditions and their corresponding results/actions in a table format.
+
+Where It Is Useful
+Business rule validations
+Online banking transactions
+Discount calculations
+Loan approval systems
+Login validation systems
+Any feature where multiple conditions decide one result
+
+
+Example: Online Money Transfer
+Requirement: Money transfer should be successful only if:
+User is logged in
+Account is active
+Sufficient balance is available
+OTP is verified
+If any condition fails → Transfer should fail.
+
+Step 1: Identify Conditions
+C1: Logged in? (Yes / No)
+C2: Account Active? (Yes / No)
+C3: Sufficient Balance? (Yes / No)
+C4: OTP Verified? (Yes / No)
+Each condition has 2 possibilities.
+Total combinations = 2⁴ = 16 combinations
+
+Step 2: Create Decision Table
+Rule	Login	Active	Balance	OTP	Result
+1	Yes	Yes	Yes	Yes	Transfer Success
+2	No	Yes	Yes	Yes	Fail (Not logged in)
+3	Yes	No	Yes	Yes	Fail (Inactive account)
+4	Yes	Yes	No	Yes	Fail (Insufficient balance)
+5	Yes	Yes	Yes	No	Fail (OTP failed)
+
+(All other combinations where any condition = No → Transfer Failed)
+
+
+Step 3: Create Test Cases
+Each row becomes one test case.
+Example:
+
+TC1 → All Yes → Expect Success
+TC2 → Login = No → Expect Failure
+TC3 → Account Inactive → Expect Failure
+TC4 → Balance Insufficient → Expect Failure
+TC5 → OTP Incorrect → Expect Failure
+
+Test data / Test combinations
+
+Yes, Yes, Yes, Yes → Success
+No, Yes, Yes, Yes → Fail
+Yes, No, Yes, Yes → Fail
+Yes, Yes, No, Yes → Fail
+Yes, Yes, Yes, No → Fail
+
+
+
+
+
+
+
+
+
+
+
+
+
+| Column Name           |
+| --------------------- |
+| Test Case ID          |
+| Test Scenario         |
+| Test Case Description |
+| Module Name           |
+| Pre-Conditions        |
+| Test Steps            |
+| Test Data             |
+| Expected Result       |
+| Actual Result         |
+| Status (Pass/Fail)    |
+| Priority              |
+| Severity              |
+| Environment           |
+| Build Version         |
+| Executed By           |
+| Execution Date        |
+| Comments              |
+

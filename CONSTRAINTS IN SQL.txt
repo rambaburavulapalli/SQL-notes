@@ -13,6 +13,9 @@ UNIQUE
 PRIMARY KEY
 FOREIGN KEY
 
+
+
+
 🔹 Constraint written beside column → Column-level
 🔹 Constraint written after all columns → Table-level
 
