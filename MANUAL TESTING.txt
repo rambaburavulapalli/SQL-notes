@@ -2,6 +2,7 @@ MANUAL TESTING
 ----------------
 
 ------------------
+-------------------
 -----------------
 
 Phase1: Software testing concepts.
