@@ -1,9 +1,4 @@
-MANUAL TESTING
-----------------
-
-------------------
--------------------
------------------
+MANUAL TESTING- SADHU
 
 Phase1: Software testing concepts.
 Phase2: Software testing project.
